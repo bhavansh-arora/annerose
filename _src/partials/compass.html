@@ -1,0 +1,72 @@
+<div class="compass" id="compass" data-compass data-theme="dark">
+        <div class="compass__intro">
+          <span class="label">The Clarity Compass</span>
+          <h2 class="h2" data-split>Not sure where <em>to begin?</em></h2>
+          <p>Four quick questions. Sixty seconds. Find the coaching path that fits where you are right now — then send it straight to Anne, already filled in.</p>
+          <div class="compass__meta">
+            <span>{{icon:clock}} 60 seconds</span>
+            <span>{{icon:lock}} Nothing stored until you send</span>
+          </div>
+        </div>
+        <div class="compass__panel" aria-live="polite">
+          <div class="compass__progress" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+          <div class="compass__step" data-key="pull">
+            <span class="compass__q">Question 01 / 04</span>
+            <h3>Where do you feel the pull most right now?</h3>
+            <div class="options">
+              <button class="option" type="button" data-path="leadership"><span class="option__key">A</span>Leading my team or organization with more clarity</button>
+              <button class="option" type="button" data-path="career"><span class="option__key">B</span>Figuring out my next career move</button>
+              <button class="option" type="button" data-path="life"><span class="option__key">C</span>My life, my purpose — feeling like myself again</button>
+              <button class="option" type="button" data-path="learning"><span class="option__key">D</span>Building skills across a group or team</button>
+            </div>
+          </div>
+
+          <div class="compass__step" data-key="win">
+            <span class="compass__q">Question 02 / 04</span>
+            <h3>Three months from now, what would feel like a win?</h3>
+            <div class="options">
+              <button class="option" type="button" data-path="leadership"><span class="option__key">A</span>A team that rallies behind a clear, inspiring vision</button>
+              <button class="option" type="button" data-path="career"><span class="option__key">B</span>Knowing exactly what's next — and having a plan for it</button>
+              <button class="option" type="button" data-path="life"><span class="option__key">C</span>Letting go of what's held me back and trusting my inner knowing</button>
+              <button class="option" type="button" data-path="learning"><span class="option__key">D</span>People who communicate, handle conflict and manage stress better</button>
+            </div>
+            <button class="compass__back" type="button">{{icon:arrow}} Back</button>
+          </div>
+
+          <div class="compass__step" data-key="format">
+            <span class="compass__q">Question 03 / 04</span>
+            <h3>How would you like to work together?</h3>
+            <div class="options">
+              <button class="option" type="button" data-value="online"><span class="option__key">A</span>One-on-one, online — from wherever I am</button>
+              <button class="option" type="button" data-value="person"><span class="option__key">B</span>One-on-one, in person in Toronto</button>
+              <button class="option" type="button" data-value="either"><span class="option__key">C</span>Either works for me</button>
+              <button class="option" type="button" data-value="group" data-path="learning"><span class="option__key">D</span>As a group or team session</button>
+            </div>
+            <button class="compass__back" type="button">{{icon:arrow}} Back</button>
+          </div>
+
+          <div class="compass__step" data-key="timing">
+            <span class="compass__q">Question 04 / 04</span>
+            <h3>How soon are you ready to begin?</h3>
+            <div class="options">
+              <button class="option" type="button" data-value="now"><span class="option__key">A</span>Now. I'm done waiting.</button>
+              <button class="option" type="button" data-value="soon"><span class="option__key">B</span>In the next month or two</button>
+              <button class="option" type="button" data-value="exploring"><span class="option__key">C</span>I'm exploring for now</button>
+            </div>
+            <button class="compass__back" type="button">{{icon:arrow}} Back</button>
+          </div>
+
+          <div class="compass__result">
+            <span class="compass__q">Your path</span>
+            <h3 class="h3 compass__result-title">Leadership <em>Coaching</em></h3>
+            <div class="compass__result-tags"></div>
+            <p class="compass__result-text"></p>
+            <div class="btn-row">
+              <a class="btn btn--rose" href="contact.html" data-result-send><span class="btn__label">Send this to Anne</span><span class="btn__icon">{{icon:arrow-ur}}</span></a>
+              <a class="link-arrow" href="leadership.html" data-result-learn>Explore this path {{icon:arrow}}</a>
+            </div>
+            <button class="compass__restart" type="button">Start over</button>
+          </div>
+        </div>
+      </div>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en-CA" class="{{page.htmlclass}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{page.title}}</title>
+  <meta name="description" content="{{page.description}}">
+  <link rel="canonical" href="{{page.canonical}}">
+  <meta name="theme-color" content="#140f10">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Coach Anne Rose">
+  <meta property="og:title" content="{{page.title}}">
+  <meta property="og:description" content="{{page.description}}">
+  <meta property="og:url" content="{{page.canonical}}">
+  <meta property="og:image" content="https://www.annerose.com/{{page.og_image}}">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/fraunces-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <script>
+    (function(d){d.classList.add('js');try{if(sessionStorage.getItem('ar_seen'))d.classList.add('no-preloader')}catch(e){}})(document.documentElement);
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Coach Anne Rose — Leadership & Intuitive Life Coaching",
+    "url": "https://www.annerose.com/",
+    "image": "https://www.annerose.com/assets/img/anne-portrait.webp",
+    "telephone": "+1-416-557-1177",
+    "address": { "@type": "PostalAddress", "addressLocality": "Toronto", "addressRegion": "ON", "addressCountry": "CA" },
+    "areaServed": ["Toronto", "Canada", "Worldwide (online)"],
+    "founder": { "@type": "Person", "name": "Anne Rose", "jobTitle": "Leadership & Intuitive Life Coach, PCC, CPCC", "sameAs": ["https://www.linkedin.com/in/coachannerose"] },
+    "slogan": "Embrace the knowing within."
+  }
+  </script>
+</head>
+<body data-page="{{page.nav}}">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="preloader" aria-hidden="true">
+    <div class="preloader__word"><span>A</span><span>n</span><span>n</span><span>e</span><span>&nbsp;</span><span><em>R</em></span><span><em>o</em></span><span><em>s</em></span><span><em>e</em></span></div>
+    <div class="preloader__tag">Embrace the knowing within</div>
+    <div class="preloader__count">00%</div>
+  </div>
+
+  {{> header}}
+
+  <main id="main">
+{{BODY}}
+  </main>
+
+  {{> footer}}
+
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/motion.js" defer></script>
+</body>
+</html>
