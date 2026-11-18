@@ -193,12 +193,60 @@
     gsap.to(".hv__right, .hv__proof", { y: -110, ease: "none", scrollTrigger: { trigger: hv, start: "top top", end: "bottom top", scrub: true } });
   }
 
+  /* ---------- Hand-drawn underlines under accent words ---------- */
+  var SWASHES = [
+    "M2 14 C 40 4, 90 2, 140 8 S 230 16, 298 6",
+    "M2 10 C 60 18, 120 2, 180 10 S 260 14, 298 4",
+    "M4 12 Q 80 2 150 10 T 296 8"
+  ];
+  var swashItems = [];
+  $$(".sec-head .h2, .stack-sec__intro .h2, .wall__intro .h2, .page-hero .h1, .cta-final .h-mega, .dims__copy .h2, .compass__intro .h2").forEach(function (h, i) {
+    if (!h.querySelector("em")) return;
+    if (getComputedStyle(h).position === "static") h.style.position = "relative";
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "swash"); svg.setAttribute("viewBox", "0 0 300 20"); svg.setAttribute("preserveAspectRatio", "none"); svg.setAttribute("aria-hidden", "true");
+    var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("d", SWASHES[i % SWASHES.length]); p.setAttribute("pathLength", "1");
+    p.style.strokeDasharray = "1"; p.style.strokeDashoffset = "1";
+    svg.appendChild(p); h.appendChild(svg);
+    swashItems.push({ h: h, svg: svg });
+    gsap.to(p, { strokeDashoffset: 0, duration: 1.4, ease: "power2.inOut", delay: 0.7, scrollTrigger: { trigger: h, start: "top 85%", once: true } });
+  });
+  function placeSwashes() {
+    swashItems.forEach(function (it) {
+      var boxes = $$("em", it.h).map(function (em) { return (em.closest(".split-line") || em).getBoundingClientRect(); });
+      if (!boxes.length) return;
+      var maxTop = Math.max.apply(null, boxes.map(function (b) { return Math.round(b.top); }));
+      var last = boxes.filter(function (b) { return Math.abs(Math.round(b.top) - maxTop) < 6; });
+      var left = Math.min.apply(null, last.map(function (b) { return b.left; }));
+      var right = Math.max.apply(null, last.map(function (b) { return b.right; }));
+      var bottom = Math.max.apply(null, last.map(function (b) { return b.bottom; }));
+      var hr = it.h.getBoundingClientRect();
+      var hgt = Math.max(10, (bottom - maxTop) * 0.22);
+      it.svg.style.left = (left - hr.left) + "px";
+      it.svg.style.width = (right - left) + "px";
+      it.svg.style.top = (bottom - hr.top - hgt * 0.9) + "px";
+      it.svg.style.height = hgt + "px";
+      it.svg.style.bottom = "auto";
+    });
+  }
+  placeSwashes();
+  window.addEventListener("resize", placeSwashes);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeSwashes);
+  window.addEventListener("load", placeSwashes);
+
+  /* ---------- Line-art roses draw themselves ---------- */
+  $$("[data-draw]").forEach(function (svg) {
+    var paths = $$("path", svg);
+    gsap.to(paths, { strokeDashoffset: 0, duration: 2.6, ease: "power2.inOut", stagger: 0.12, scrollTrigger: { trigger: svg, start: "top 92%", once: true } });
+  });
+
   /* ---------- Stacking cards: earlier cards recede ---------- */
   var stackCards = $$(".stack-card");
   stackCards.forEach(function (card, i) {
     var next = stackCards[i + 1];
     if (!next) return;
-    gsap.to(card, { scale: 0.93, filter: "brightness(.86)", ease: "none", scrollTrigger: { trigger: next, start: "top 85%", end: "top 30%", scrub: true } });
+    gsap.fromTo(card, { scale: 1 }, { scale: 0.94, ease: "none", scrollTrigger: { trigger: next, start: "top 85%", end: "top 30%", scrub: true } });
   });
 
   /* ---------- Progress ring ---------- */
