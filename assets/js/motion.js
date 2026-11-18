@@ -103,7 +103,20 @@
   }
 
   /* Hero intro (waits for the preloader) */
-  var heroSplits = $$(".hero-x [data-split], .page-hero [data-split], .notfound [data-split]");
+  /* Giant hero word: split into letters */
+  var giant = document.querySelector("[data-giant]");
+  var giantLetters = [];
+  if (giant) {
+    var txt = giant.textContent; giant.textContent = "";
+    txt.split("").forEach(function (ch) { var sp = document.createElement("span"); sp.textContent = ch; sp.style.display = "inline-block"; giant.appendChild(sp); giantLetters.push(sp); });
+  }
+  var hv = document.querySelector("[data-hv]");
+  var pops = $$("[data-pop]");
+  if (giantLetters.length) gsap.set(giantLetters, { yPercent: 60, autoAlpha: 0, rotate: 8 });
+  if (pops.length) gsap.set(pops, { autoAlpha: 0, y: 40, scale: .94 });
+  if (hv) gsap.set(hv, { scale: .965 });
+
+  var heroSplits = $$(".hv [data-split], .page-hero [data-split], .notfound [data-split]");
   var heroBits = $$("[data-hero]");
   gsap.set(heroSplits.map(function (el) { return $$(".split-line > span", el); }).flat(), { yPercent: 118 });
   gsap.set(heroBits, { autoAlpha: 0, y: 30 });
@@ -118,7 +131,10 @@
     var tl = gsap.timeline({ defaults: { ease: "expo.out" } });
     if (heroPanel) tl.to(heroPanel, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "expo.inOut" }, 0);
     if (heroArch) tl.to(heroArch, { scaleY: 1, duration: 1.6, ease: "expo.inOut" }, 0.35);
-    if (heroRise) tl.to(heroRise, { yPercent: 0, autoAlpha: 1, duration: 1.8 }, 0.9);
+    if (hv) tl.to(hv, { scale: 1, duration: 1.6, ease: "expo.out", clearProps: "transform" }, 0);
+    if (giantLetters.length) tl.to(giantLetters, { yPercent: 0, autoAlpha: 1, rotate: 0, duration: 1.6, stagger: 0.05 }, 0.15);
+    if (heroRise) tl.to(heroRise, { yPercent: 0, autoAlpha: 1, duration: 1.8 }, 0.45);
+    if (pops.length) tl.to(pops, { autoAlpha: 1, y: 0, scale: 1, duration: 1.2, stagger: 0.09 }, 0.8);
     heroSplits.forEach(function (el, i) {
       tl.to($$(".split-line > span", el), { yPercent: 0, duration: 1.6, stagger: 0.07 }, 0.2 + i * 0.12);
     });
@@ -170,12 +186,45 @@
   });
 
   /* ---------- Hero portrait drifts as you scroll away ---------- */
-  if (heroRise && heroPanel) gsap.to(heroRise, { yPercent: -6, ease: "none", scrollTrigger: { trigger: heroPanel, start: "top top", end: "bottom top", scrub: true } });
+  if (hv && window.matchMedia("(min-width: 1025px)").matches) {
+    if (giant) gsap.to(giant, { xPercent: -14, ease: "none", scrollTrigger: { trigger: hv, start: "top top", end: "bottom top", scrub: true } });
+    if (heroRise) gsap.to(heroRise, { yPercent: 8, scale: 1.04, ease: "none", scrollTrigger: { trigger: hv, start: "top top", end: "bottom top", scrub: true } });
+    gsap.to(".hv__left", { y: -60, ease: "none", scrollTrigger: { trigger: hv, start: "top top", end: "bottom top", scrub: true } });
+    gsap.to(".hv__right, .hv__proof", { y: -110, ease: "none", scrollTrigger: { trigger: hv, start: "top top", end: "bottom top", scrub: true } });
+  }
+
+  /* ---------- Stacking cards: earlier cards recede ---------- */
+  var stackCards = $$(".stack-card");
+  stackCards.forEach(function (card, i) {
+    var next = stackCards[i + 1];
+    if (!next) return;
+    gsap.to(card, { scale: 0.93, filter: "brightness(.86)", ease: "none", scrollTrigger: { trigger: next, start: "top 85%", end: "top 30%", scrub: true } });
+  });
+
+  /* ---------- Progress ring ---------- */
+  $$("[data-ring]").forEach(function (ring) {
+    var fg = ring.querySelector(".ring__fg");
+    var pct = parseFloat(ring.getAttribute("data-ring")) / 100;
+    gsap.fromTo(fg, { strokeDashoffset: 289 }, { strokeDashoffset: 289 * (1 - pct), duration: 2.4, ease: "power3.out", scrollTrigger: { trigger: ring, start: "top 85%", once: true } });
+  });
 
   /* ---------- Section labels glide in ---------- */
   $$(".sec-head .label, .statement__label .label").forEach(function (el) {
     gsap.fromTo(el, { autoAlpha: 0, x: -24 }, { autoAlpha: 1, x: 0, duration: 1.3, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 90%", once: true } });
   });
+
+  /* ---------- 3D tilt on tiles ---------- */
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    $$("[data-tilt]").forEach(function (el) {
+      el.style.transformStyle = "preserve-3d";
+      el.addEventListener("mousemove", function (e) {
+        var r = el.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        gsap.to(el, { rotateY: x * 6, rotateX: -y * 6, y: -6, transformPerspective: 1000, duration: 0.6, ease: "power3.out" });
+      });
+      el.addEventListener("mouseleave", function () { gsap.to(el, { rotateY: 0, rotateX: 0, y: 0, duration: 0.9, ease: "expo.out" }); });
+    });
+  }
 
   /* ---------- Service rows rise in ---------- */
   $$(".svc").forEach(function (row, i) {

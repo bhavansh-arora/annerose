@@ -243,6 +243,13 @@
     track.appendChild(clone);
   });
 
+  /* ---------- Testimonial wall: duplicate columns for a seamless loop ---------- */
+  $$("[data-wall] .wall__col").forEach(function (col) {
+    Array.prototype.slice.call(col.children).forEach(function (card) {
+      var c = card.cloneNode(true); c.setAttribute("aria-hidden", "true"); col.appendChild(c);
+    });
+  });
+
   /* ---------- FAQ ---------- */
   $$(".faq__item").forEach(function (item) {
     var q = $(".faq__q", item);

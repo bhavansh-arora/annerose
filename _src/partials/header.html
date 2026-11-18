@@ -1,16 +1,20 @@
 <header class="site-header">
     <div class="container">
-      <a class="brand" href="index.html" aria-label="Anne Rose — home"><span class="brand__name">Anne <em>Rose</em></span><span class="brand__sub">Leadership &amp; Life Coach</span></a>
-      <nav class="nav" aria-label="Primary">
-        <a href="about.html" {{nav:about}}>About</a>
-        <a href="coaching.html" {{nav:coaching}}>Coaching</a>
-        <a href="workshops.html" {{nav:workshops}}>Workshops</a>
-        <a href="stories.html" {{nav:stories}}>Client stories</a>
-        <a href="resources.html" {{nav:resources}}>Resources</a>
-      </nav>
-      <div class="header-actions">
-        <a class="btn btn--rose btn--sm" href="contact.html" data-book data-magnetic><span class="btn__label">Book a clarity call</span><span class="btn__icon">{{icon:arrow-ur}}</span></a>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu"><span class="menu-toggle__text">Menu</span><span class="menu-toggle__lines"><i></i><i></i></span></button>
+      <div class="header-bar">
+        <a class="brand" href="index.html" aria-label="Anne Rose — home"><span class="brand__mono">ar</span><span class="brand__text"><span class="brand__name">Anne <em>Rose</em></span><span class="brand__sub">Leadership &amp; Life Coach</span></span></a>
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html" {{nav:home}}>Home</a>
+          <a href="about.html" {{nav:about}}>About</a>
+          <a href="coaching.html" {{nav:coaching}}>Coaching</a>
+          <a href="workshops.html" {{nav:workshops}}>Workshops</a>
+          <a href="stories.html" {{nav:stories}}>Stories</a>
+          <a href="resources.html" {{nav:resources}}>Resources</a>
+        </nav>
+        <div class="header-actions">
+          <a class="header-phone" href="tel:+14165571177">{{icon:phone}} 416-557-1177</a>
+          <a class="btn btn--rose btn--sm" href="contact.html" data-book><span class="btn__label">Book a call</span><span class="btn__icon">{{icon:arrow-ur}}</span></a>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu"><span class="menu-toggle__text">Menu</span><span class="menu-toggle__lines"><i></i><i></i></span></button>
+        </div>
       </div>
     </div>
   </header>
