@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="assets/css/fonts.css">
   <link rel="stylesheet" href="assets/css/main.css">
   <script>
-    (function(d){d.classList.add('js');try{if(sessionStorage.getItem('ar_seen'))d.classList.add('no-preloader')}catch(e){}})(document.documentElement);
+    (function(d){d.classList.add('js');try{if(sessionStorage.getItem('ar_seen'))d.classList.add('no-preloader');if(sessionStorage.getItem('ar_pt')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('pt-enter');sessionStorage.removeItem('ar_pt');setTimeout(function(){d.classList.remove('pt-enter')},3500)}}catch(e){}})(document.documentElement);
   </script>
   <script type="application/ld+json">
   {
@@ -63,7 +63,15 @@
     <div class="preloader__count">00%</div>
   </div>
 
-  <div class="curtain" aria-hidden="true"><span class="curtain__mark">Anne <em>Rose</em></span></div>
+  <div class="curtain" aria-hidden="true">
+    <div class="curtain__cols curtain__cols--gold"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="curtain__cols curtain__cols--wine"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="curtain__label">
+      <span class="curtain__kick"><b>ar</b> Anne Rose · Coaching</span>
+      <span class="curtain__title">Anne <em>Rose</em></span>
+      <span class="curtain__bar"><i></i></span>
+    </div>
+  </div>
 
   {{> header}}
 

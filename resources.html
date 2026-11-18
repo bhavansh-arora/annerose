@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="assets/css/fonts.css">
   <link rel="stylesheet" href="assets/css/main.css">
   <script>
-    (function(d){d.classList.add('js');try{if(sessionStorage.getItem('ar_seen'))d.classList.add('no-preloader')}catch(e){}})(document.documentElement);
+    (function(d){d.classList.add('js');try{if(sessionStorage.getItem('ar_seen'))d.classList.add('no-preloader');if(sessionStorage.getItem('ar_pt')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('pt-enter');sessionStorage.removeItem('ar_pt');setTimeout(function(){d.classList.remove('pt-enter')},3500)}}catch(e){}})(document.documentElement);
   </script>
   <script type="application/ld+json">
   {
@@ -63,7 +63,15 @@
     <div class="preloader__count">00%</div>
   </div>
 
-  <div class="curtain" aria-hidden="true"><span class="curtain__mark">Anne <em>Rose</em></span></div>
+  <div class="curtain" aria-hidden="true">
+    <div class="curtain__cols curtain__cols--gold"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="curtain__cols curtain__cols--wine"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="curtain__label">
+      <span class="curtain__kick"><b>ar</b> Anne Rose · Coaching</span>
+      <span class="curtain__title">Anne <em>Rose</em></span>
+      <span class="curtain__bar"><i></i></span>
+    </div>
+  </div>
 
   <header class="site-header">
     <div class="container">
@@ -89,14 +97,14 @@
   <div class="menu" id="site-menu" inert>
     <div class="container menu__inner">
       <ul class="menu__list">
-        <li><a href="index.html"><span>01</span><b>Home</b></a></li>
-        <li><a href="about.html"><span>02</span><b>About <em>Anne</em></b></a></li>
-        <li><a href="coaching.html"><span>03</span><b>One-on-one <em>coaching</em></b></a></li>
-        <li><a href="leadership.html"><span>04</span><b>Leadership</b></a></li>
-        <li><a href="life-coaching.html"><span>05</span><b>Intuitive <em>life</em></b></a></li>
-        <li><a href="workshops.html"><span>06</span><b>Workshops <em>&amp; talks</em></b></a></li>
-        <li><a href="stories.html"><span>07</span><b>Client <em>stories</em></b></a></li>
-        <li><a href="resources.html"><span>08</span><b>Resources</b></a></li>
+        <li><a href="index.html" ><span>01</span><b>Home</b></a></li>
+        <li><a href="about.html" ><span>02</span><b>About <em>Anne</em></b></a></li>
+        <li><a href="coaching.html" ><span>03</span><b>One-on-one <em>coaching</em></b></a></li>
+        <li><a href="leadership.html" ><span>04</span><b>Leadership</b></a></li>
+        <li><a href="life-coaching.html" ><span>05</span><b>Intuitive <em>life</em></b></a></li>
+        <li><a href="workshops.html" ><span>06</span><b>Workshops <em>&amp; talks</em></b></a></li>
+        <li><a href="stories.html" ><span>07</span><b>Client <em>stories</em></b></a></li>
+        <li><a href="resources.html" aria-current="page"><span>08</span><b>Resources</b></a></li>
       </ul>
       <div class="menu__aside">
         <div class="menu__portrait"><img src="assets/img/anne-portrait-cut.webp" alt="" width="1100" height="1603" loading="lazy"></div>

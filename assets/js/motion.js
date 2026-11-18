@@ -143,6 +143,8 @@
   }
   if (document.querySelector(".preloader") && !document.documentElement.classList.contains("no-preloader")) {
     document.addEventListener("site:loaded", playHero, { once: true });
+  } else if (document.documentElement.classList.contains("pt-enter")) {
+    gsap.delayedCall(0.45, playHero);
   } else {
     playHero();
   }
@@ -153,19 +155,19 @@
     var words = $$(".split-line > span", el);
     gsap.set(words, { yPercent: 118 });
     ST.create({
-      trigger: el, start: "top 88%", once: true,
+      trigger: el, start: "top 96%", once: true,
       onEnter: function () { animateSplit(el); }
     });
   });
 
   /* ---------- Generic reveals ---------- */
   ST.batch("[data-reveal]", {
-    start: "top 90%",
+    start: "top 99%",
     once: true,
     onEnter: function (batch) {
       batch.forEach(function (el, i) {
         var d = parseFloat(el.getAttribute("data-delay") || 0);
-        setTimeout(function () { el.classList.add("is-in"); }, (d + i * 0.08) * 1000);
+        setTimeout(function () { el.classList.add("is-in"); }, (d * 0.5 + i * 0.05) * 1000);
       });
     }
   });
@@ -343,7 +345,7 @@
     var items = Array.prototype.slice.call(group.children);
     gsap.fromTo(items, { y: 70, autoAlpha: 0 }, {
       y: 0, autoAlpha: 1, duration: 1.2, ease: "expo.out", stagger: 0.1,
-      scrollTrigger: { trigger: group, start: "top 85%", once: true }
+      scrollTrigger: { trigger: group, start: "top 95%", once: true }
     });
   });
 

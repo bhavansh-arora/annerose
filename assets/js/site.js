@@ -216,6 +216,26 @@
 
   /* ---------- Page transitions (wine curtain between pages) ---------- */
   var curtain = $(".curtain");
+  var PAGE_TITLES = {
+    "index": "Embrace the <em>knowing</em>", "": "Embrace the <em>knowing</em>",
+    "about": "About <em>Anne</em>", "coaching": "One-on-one <em>coaching</em>",
+    "leadership": "Leadership <em>coaching</em>", "life-coaching": "Intuitive <em>life</em>",
+    "workshops": "Workshops <em>&amp; talks</em>", "stories": "Client <em>stories</em>",
+    "resources": "Resources <em>&amp; reading</em>", "contact": "Let's <em>talk</em>", "404": "Off the <em>path</em>"
+  };
+  function titleFor(path) {
+    var key = (path.split("/").pop() || "").replace(/\.html$/, "");
+    return PAGE_TITLES[key] || "Anne <em>Rose</em>";
+  }
+  var ctTitle = curtain ? $(".curtain__title", curtain) : null;
+  /* Arriving from another page: panels lift away */
+  if (curtain && doc.classList.contains("pt-enter")) {
+    if (ctTitle) ctTitle.innerHTML = titleFor(location.pathname);
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      curtain.classList.add("is-leaving");
+      setTimeout(function () { doc.classList.remove("pt-enter"); curtain.classList.remove("is-leaving"); }, 1500);
+    }); });
+  }
   if (curtain && !reduced) {
     document.addEventListener("click", function (e) {
       var a = e.target.closest("a[href]");
@@ -228,10 +248,12 @@
       if (url.pathname === location.pathname && url.hash) return;
       e.preventDefault();
       closeMenu();
+      if (ctTitle) ctTitle.innerHTML = titleFor(url.pathname);
+      store.set("ar_pt", "1");
       curtain.classList.add("is-covering");
-      setTimeout(function () { location.href = url.href; }, 780);
+      setTimeout(function () { location.href = url.href; }, 900);
     });
-    window.addEventListener("pageshow", function (e) { if (e.persisted) curtain.classList.toggle("is-covering", false); });
+    window.addEventListener("pageshow", function (e) { if (e.persisted) { curtain.classList.remove("is-covering", "is-leaving"); doc.classList.remove("pt-enter"); } });
   }
 
   /* ---------- Marquees: clone group for a seamless loop ---------- */

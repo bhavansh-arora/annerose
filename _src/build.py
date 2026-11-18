@@ -71,6 +71,8 @@ def render(text, meta, depth=0):
     text = text.replace("{{mark}}", MARK)
     text = re.sub(r"\{\{nav:([\w-]+)\}\}",
                   lambda m: 'aria-current="page"' if meta.get("nav") == m.group(1) else "", text)
+    text = re.sub(r"\{\{cur:([\w.-]+)\}\}",
+                  lambda m: 'aria-current="page"' if meta.get("slug") == m.group(1) else "", text)
     text = re.sub(r"\{\{page\.([\w-]+)\}\}", lambda m: str(meta.get(m.group(1), "")), text)
     return text
 
