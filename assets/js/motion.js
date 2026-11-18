@@ -97,26 +97,32 @@
 
   function animateSplit(el, delay) {
     var words = $$(".split-line > span", el);
-    return gsap.fromTo(words, { yPercent: 115, rotate: 4 }, {
-      yPercent: 0, rotate: 0, duration: 1.25, ease: "expo.out", stagger: 0.045, delay: delay || 0
+    return gsap.fromTo(words, { yPercent: 118 }, {
+      yPercent: 0, duration: 1.5, ease: "expo.out", stagger: 0.05, delay: delay || 0
     });
   }
 
   /* Hero intro (waits for the preloader) */
-  var heroSplits = $$(".hero [data-split], .page-hero [data-split], .notfound [data-split]");
+  var heroSplits = $$(".hero-x [data-split], .page-hero [data-split], .notfound [data-split]");
   var heroBits = $$("[data-hero]");
-  gsap.set(heroSplits.map(function (el) { return $$(".split-line > span", el); }).flat(), { yPercent: 115 });
+  gsap.set(heroSplits.map(function (el) { return $$(".split-line > span", el); }).flat(), { yPercent: 118 });
   gsap.set(heroBits, { autoAlpha: 0, y: 30 });
-  var heroPortrait = document.querySelector("[data-hero-portrait]");
-  if (heroPortrait) gsap.set(heroPortrait, { clipPath: "inset(100% 0% 0% 0% round 999px 999px 28px 28px)" });
+  var heroPanel = document.querySelector("[data-hero-panel]");
+  var heroArch = document.querySelector("[data-hero-arch]");
+  var heroRise = document.querySelector("[data-hero-rise]");
+  if (heroPanel) gsap.set(heroPanel, { clipPath: "inset(0% 0% 0% 100%)" });
+  if (heroArch) gsap.set(heroArch, { scaleY: 0, transformOrigin: "50% 100%" });
+  if (heroRise) gsap.set(heroRise, { yPercent: 18, autoAlpha: 0 });
 
   function playHero() {
     var tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+    if (heroPanel) tl.to(heroPanel, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "expo.inOut" }, 0);
+    if (heroArch) tl.to(heroArch, { scaleY: 1, duration: 1.6, ease: "expo.inOut" }, 0.35);
+    if (heroRise) tl.to(heroRise, { yPercent: 0, autoAlpha: 1, duration: 1.8 }, 0.9);
     heroSplits.forEach(function (el, i) {
-      tl.to($$(".split-line > span", el), { yPercent: 0, rotate: 0, duration: 1.4, stagger: 0.06 }, i * 0.12);
+      tl.to($$(".split-line > span", el), { yPercent: 0, duration: 1.6, stagger: 0.07 }, 0.2 + i * 0.12);
     });
-    if (heroPortrait) tl.to(heroPortrait, { clipPath: "inset(0% 0% 0% 0% round 999px 999px 28px 28px)", duration: 1.6, ease: "expo.inOut" }, 0.1);
-    tl.to(heroBits, { autoAlpha: 1, y: 0, duration: 1.2, stagger: 0.08 }, 0.5);
+    tl.to(heroBits, { autoAlpha: 1, y: 0, duration: 1.4, stagger: 0.1 }, 0.8);
   }
   if (document.querySelector(".preloader") && !document.documentElement.classList.contains("no-preloader")) {
     document.addEventListener("site:loaded", playHero, { once: true });
@@ -128,7 +134,7 @@
   $$("[data-split]").forEach(function (el) {
     if (heroSplits.indexOf(el) > -1) return;
     var words = $$(".split-line > span", el);
-    gsap.set(words, { yPercent: 115, rotate: 4 });
+    gsap.set(words, { yPercent: 118 });
     ST.create({
       trigger: el, start: "top 88%", once: true,
       onEnter: function () { animateSplit(el); }
@@ -150,11 +156,30 @@
   /* ---------- Image clip reveals ---------- */
   $$("[data-clip]").forEach(function (el) {
     var img = el.querySelector("img");
-    gsap.fromTo(el, { clipPath: "inset(100% 0% 0% 0% round 28px)" }, {
-      clipPath: "inset(0% 0% 0% 0% round 28px)", duration: 1.6, ease: "expo.inOut",
-      scrollTrigger: { trigger: el, start: "top 85%", once: true }
+    gsap.fromTo(el, { clipPath: "inset(100% 0% 0% 0%)" }, {
+      clipPath: "inset(0% 0% 0% 0%)", duration: 1.8, ease: "expo.inOut",
+      scrollTrigger: { trigger: el, start: "top 86%", once: true },
+      onComplete: function () { el.style.clipPath = "none"; }
     });
-    if (img) gsap.fromTo(img, { scale: 1.3 }, { scale: 1, duration: 2, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 85%", once: true } });
+    if (img) gsap.fromTo(img, { scale: 1.25 }, { scale: 1, duration: 2.4, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 86%", once: true } });
+  });
+
+  /* ---------- Hairline rules draw in ---------- */
+  $$("[data-rule]").forEach(function (el) {
+    gsap.to(el, { scaleX: 1, duration: 1.6, ease: "expo.inOut", scrollTrigger: { trigger: el, start: "top 92%", once: true } });
+  });
+
+  /* ---------- Hero portrait drifts as you scroll away ---------- */
+  if (heroRise && heroPanel) gsap.to(heroRise, { yPercent: -6, ease: "none", scrollTrigger: { trigger: heroPanel, start: "top top", end: "bottom top", scrub: true } });
+
+  /* ---------- Section labels glide in ---------- */
+  $$(".sec-head .label, .statement__label .label").forEach(function (el) {
+    gsap.fromTo(el, { autoAlpha: 0, x: -24 }, { autoAlpha: 1, x: 0, duration: 1.3, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 90%", once: true } });
+  });
+
+  /* ---------- Service rows rise in ---------- */
+  $$(".svc").forEach(function (row, i) {
+    gsap.fromTo(row, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 1.3, ease: "expo.out", delay: i * 0.06, scrollTrigger: { trigger: row, start: "top 92%", once: true } });
   });
 
   /* ---------- Parallax ---------- */

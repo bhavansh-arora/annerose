@@ -146,24 +146,28 @@
     setTimeout(function () { pre.remove(); }, 1200);
   }
 
-  /* ---------- Cursor ---------- */
+  /* ---------- Cursor (dot + trailing ring) ---------- */
   if (finePointer && !reduced) {
     var cursor = document.createElement("div");
     cursor.className = "cursor";
     cursor.setAttribute("aria-hidden", "true");
-    cursor.innerHTML = '<div class="cursor__dot"><span></span></div>';
+    cursor.innerHTML = '<div class="cursor__dot"></div><div class="cursor__ring"><span></span></div>';
     body.appendChild(cursor);
-    var label = $("span", cursor);
-    var mx = -100, my = -100, cx = -100, cy = -100;
+    var dot = $(".cursor__dot", cursor), ring = $(".cursor__ring", cursor), label = $("span", ring);
+    var mx = -100, my = -100, rx = -100, ry = -100;
     window.addEventListener("mousemove", function (e) { mx = e.clientX; my = e.clientY; }, { passive: true });
     (function loop() {
-      cx += (mx - cx) * 0.2; cy += (my - cy) * 0.2;
-      cursor.style.transform = "translate3d(" + cx + "px," + cy + "px,0)";
+      rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
+      dot.style.transform = "translate3d(" + mx + "px," + my + "px,0)";
+      ring.style.transform = "translate3d(" + rx + "px," + ry + "px,0)";
       requestAnimationFrame(loop);
     })();
+    var DARK = '[data-theme="dark"], .dark, .dark-2, .cta-final, .site-footer, .program, .compass, .menu, .svc';
     document.addEventListener("mouseover", function (e) {
       var t = e.target.closest("[data-cursor], a, button, .choice, .option");
-      cursor.classList.remove("is-hover", "is-label");
+      cursor.classList.toggle("is-hover", false);
+      cursor.classList.toggle("is-label", false);
+      cursor.classList.toggle("on-dark", !!e.target.closest(DARK) || body.classList.contains("menu-open"));
       if (!t) return;
       var txt = t.getAttribute("data-cursor");
       if (txt) { label.textContent = txt; cursor.classList.add("is-label"); }
@@ -174,15 +178,60 @@
 
     /* Magnetic buttons */
     $$("[data-magnetic]").forEach(function (el) {
-      var strength = 0.28;
       el.addEventListener("mousemove", function (e) {
         var r = el.getBoundingClientRect();
-        var x = e.clientX - r.left - r.width / 2;
-        var y = e.clientY - r.top - r.height / 2;
-        el.style.transform = "translate(" + x * strength + "px," + y * strength + "px)";
+        el.style.transform = "translate(" + (e.clientX - r.left - r.width / 2) * 0.22 + "px," + (e.clientY - r.top - r.height / 2) * 0.3 + "px)";
       });
       el.addEventListener("mouseleave", function () { el.style.transform = ""; });
     });
+
+    /* Service list: an arched image follows the cursor */
+    $$("[data-hover-list]").forEach(function (list) {
+      var box = document.createElement("div");
+      box.className = "hover-img";
+      box.setAttribute("aria-hidden", "true");
+      var imgs = {};
+      $$(".svc", list).forEach(function (row) {
+        var src = row.getAttribute("data-img");
+        if (!src || imgs[src]) return;
+        var im = new Image(); im.src = src; im.alt = ""; box.appendChild(im); imgs[src] = im;
+      });
+      body.appendChild(box);
+      var bx = 0, by = 0, tx = 0, ty = 0, on = false;
+      (function follow() {
+        bx += (tx - bx) * 0.12; by += (ty - by) * 0.12;
+        box.style.left = bx + "px"; box.style.top = by + "px";
+        requestAnimationFrame(follow);
+      })();
+      list.addEventListener("mousemove", function (e) { tx = e.clientX + 200; ty = e.clientY; if (!on) { bx = tx; by = ty; } });
+      $$(".svc", list).forEach(function (row) {
+        row.addEventListener("mouseenter", function () {
+          on = true; box.classList.add("is-visible");
+          Object.keys(imgs).forEach(function (k) { imgs[k].classList.toggle("is-active", k === row.getAttribute("data-img")); });
+        });
+      });
+      list.addEventListener("mouseleave", function () { on = false; box.classList.toggle("is-visible", false); });
+    });
+  }
+
+  /* ---------- Page transitions (wine curtain between pages) ---------- */
+  var curtain = $(".curtain");
+  if (curtain && !reduced) {
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest("a[href]");
+      if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      if (a.target && a.target !== "_self") return;
+      var href = a.getAttribute("href");
+      if (!href || href.charAt(0) === "#" || /^(mailto:|tel:|javascript:)/i.test(href)) return;
+      var url = new URL(a.href, location.href);
+      if (url.origin !== location.origin) return;
+      if (url.pathname === location.pathname && url.hash) return;
+      e.preventDefault();
+      closeMenu();
+      curtain.classList.add("is-covering");
+      setTimeout(function () { location.href = url.href; }, 780);
+    });
+    window.addEventListener("pageshow", function (e) { if (e.persisted) curtain.classList.toggle("is-covering", false); });
   }
 
   /* ---------- Marquees: clone group for a seamless loop ---------- */

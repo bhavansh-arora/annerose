@@ -1,37 +1,33 @@
 <!--meta {"title": "Anne Rose — Leadership & Intuitive Life Coach | Toronto & Online", "description": "Internationally recognized leadership and intuitive life coach Anne Rose helps accomplished people find clarity and results. Clients report achieving 95%+ of their goals in 3 months or less. One-on-one, online or in person in Toronto.", "nav": "home"} -->
 
     <!-- ============ HERO ============ -->
-    <section class="hero" data-theme="dark">
-      <div class="hero__glow" aria-hidden="true"><i></i><i></i><i></i></div>
-      <div class="hero__grid-lines" aria-hidden="true"></div>
-
-      <div class="container hero__top" data-hero>
-        <span class="label">Leadership &amp; Intuitive Life Coach</span>
-        <div class="hero__meta"><span>One-on-one, online worldwide</span><span>In person · Toronto</span></div>
-      </div>
-
-      <div class="container hero__body">
-        <h1 class="hero__title">
+    <section class="hero-x">
+      <div class="hero-x__left">
+        <div class="hero-x__eyebrow" data-hero>
+          <span class="label">Leadership &amp; Intuitive Life Coaching</span>
+          <span class="tiny">Toronto · Online worldwide</span>
+        </div>
+        <h1 class="hero-x__title">
           <span class="sr-only">Anne Rose, leadership and intuitive life coach — </span>
-          <span class="h-mega" data-split><span class="row">Embrace</span> <span class="row row--indent">the <em>knowing</em></span> <span class="row">within.</span></span>
+          <span data-split><span class="row">Embrace</span> <span class="row row--indent">the <em>knowing</em></span> <span class="row">within.</span></span>
         </h1>
-        <div class="hero__portrait">
-          <div class="hero__arch" data-hero-portrait></div>
-          <img class="hero__cut" src="assets/img/anne-standing-cut.webp" alt="Anne Rose, smiling, hands on hips" width="1069" height="1448" fetchpriority="high" data-hero>
-          <div class="hero__badge" data-hero>{{> badge}}</div>
+        <div class="hero-x__foot" data-hero>
+          <p class="hero-x__intro">You're the one everyone counts on for answers. Anne helps you find your own — and turn them into results, with a coach clients say can <em>"lovingly kick butt."</em></p>
+          <span class="hero-x__scroll"><i></i>Scroll</span>
+        </div>
+        <div class="btn-row mt-m" data-hero>
+          <a class="btn btn--rose" href="contact.html" data-book data-magnetic><span class="btn__label">Book a clarity call</span><span class="btn__icon">{{icon:arrow}}</span></a>
+          <a class="link-arrow" href="#compass"><span>Find your path</span> {{icon:arrow}}</a>
         </div>
       </div>
-
-      <div class="container">
-        <div class="hero__bottom">
-          <p class="hero__intro" data-hero>You're the one everyone counts on for answers. <strong>Anne helps you find your own</strong> — and turn them into results, with a coach clients say can <strong>"lovingly kick butt."</strong></p>
-          <div class="hero__cta btn-row" data-hero>
-            <a class="btn btn--rose" href="contact.html" data-book data-magnetic><span class="btn__label">Book a clarity call</span><span class="btn__icon">{{icon:arrow-ur}}</span></a>
-            <a class="btn btn--ghost" href="#compass" data-magnetic><span class="btn__label">Find your path</span><span class="btn__icon">{{icon:compass}}</span></a>
-          </div>
+      <div class="hero-x__right" data-theme="dark" data-hero-panel>
+        <div class="hero-x__arch">
+          <div class="hero-x__arch-bg" data-hero-arch></div>
+          <img src="assets/img/anne-standing-cut.webp" alt="Anne Rose, smiling, hands on hips" width="1069" height="1448" fetchpriority="high" data-hero-rise>
+          <div class="hero-x__seal" data-hero>{{> badge}}</div>
         </div>
+        <div class="hero-x__caption" data-hero><span><em>Anne Rose</em> &nbsp;PCC · CPCC · NLP</span><span>Coach · Speaker · Author</span></div>
       </div>
-      <div class="hero__scroll" aria-hidden="true"></div>
     </section>
 
     {{> creds-marquee}}
@@ -39,11 +35,12 @@
     <!-- ============ STATEMENT ============ -->
     <section class="statement">
       <div class="container statement__grid">
-        <div class="statement__label"><span class="label">Sound familiar?</span></div>
+        <div class="statement__label"><span class="label">I. &nbsp;Sound familiar?</span></div>
         <p class="statement__text" data-words>You are intelligent. An accomplished leader, team member and family member. You are counted on to have the answers. Yet when it comes to what you really want — for your work and your life — you're at a loss. You know you want change. You know you want more. <em>You just don't know the details yet.</em></p>
         <div class="statement__foot" data-reveal>
-          <a class="btn" href="about.html" data-magnetic><span class="btn__label">Meet Anne</span><span class="btn__icon">{{icon:arrow}}</span></a>
+          <div class="ornament">{{icon:spark}}</div>
           <p class="muted">That's exactly where Anne comes in. She draws on her training, experience and life wisdom to tap into the knowing that's already within you.</p>
+          <a class="link-arrow" href="about.html"><span>Meet Anne</span> {{icon:arrow}}</a>
         </div>
       </div>
     </section>
@@ -53,7 +50,7 @@
       <div class="container">
         <div class="sec-head">
           <div class="sec-head__title">
-            <span class="label">The proof</span>
+            <span class="label">II. &nbsp;The proof</span>
             <h2 class="h2" data-split>Client results <em>speak for themselves.</em></h2>
           </div>
           <div class="sec-head__aside" data-reveal>
@@ -85,71 +82,54 @@
       </div>
     </section>
 
-    <!-- ============ PATHS ============ -->
+    <!-- ============ SERVICES ============ -->
     <section class="section paper-2">
       <div class="container">
         <div class="sec-head">
           <div class="sec-head__title">
-            <span class="label">Ways to work together</span>
-            <h2 class="h2" data-split>Three paths. <em>One you.</em></h2>
+            <span class="label">III. &nbsp;Ways to work together</span>
+            <h2 class="h2" data-split>Four paths. <em>One you.</em></h2>
           </div>
           <div class="sec-head__aside" data-reveal>
             <p class="muted">Personal and professional growth, clarity and success — shaped around where you are and where you want to go. One-on-one sessions run online or in person in Toronto.</p>
-            <a class="link-arrow mt-m" href="coaching.html">How one-on-one coaching works {{icon:arrow}}</a>
           </div>
         </div>
-        <div class="paths" data-stagger>
-          <a class="path-card" href="leadership.html" data-cursor="Explore">
-            <div class="path-card__media">
-              <span class="path-card__tag">For leaders</span>
-              <span class="path-card__num">01</span>
-              <img src="assets/img/leadership.webp" alt="A confident leadership team" width="1073" height="1113" loading="lazy">
-            </div>
-            <div class="path-card__body">
-              <h3 class="h3">Leadership <em>Coaching</em></h3>
-              <p>Guidance, tools and inspiration to be your best leader — reconnect with your vision and give your team a clear direction to follow.</p>
-              <ul class="path-card__list">
-                <li>Leadership vision</li>
-                <li>Build your leadership skills</li>
-                <li>Your next career step</li>
-              </ul>
-              <div class="path-card__foot"><span class="small muted">Online · In person</span><span class="path-card__go">{{icon:arrow-ur}}</span></div>
-            </div>
+        <div class="svc-list" data-hover-list>
+          <a class="svc" href="leadership.html" data-img="assets/img/leadership.webp" data-cursor="Explore">
+            <span class="svc__num">i.</span>
+            <span class="svc__title">Leadership <em>Coaching</em></span>
+            <span class="svc__thumb"><img src="assets/img/leadership.webp" alt="" width="1073" height="1113" loading="lazy"></span>
+            <span class="svc__desc">Guidance, tools and inspiration to reconnect with your vision — and give your team a clear direction to follow.</span>
+            <span class="svc__meta">For leaders</span>
+            <span class="svc__arrow">{{icon:arrow-ur}}</span>
           </a>
-          <a class="path-card path-card--dark" href="life-coaching.html" data-cursor="Explore">
-            <div class="path-card__media">
-              <span class="path-card__tag">For you</span>
-              <span class="path-card__num">02</span>
-              <img src="assets/img/life.webp" alt="A woman writing in a journal in warm sunlight" width="1600" height="1066" loading="lazy">
-            </div>
-            <div class="path-card__body">
-              <h3 class="h3">Intuitive <em>Life Coaching</em></h3>
-              <p>Reconnect and recharge with your authentic, soul-centred self. Deep insight, clearer vision and a soul-guided path forward.</p>
-              <ul class="path-card__list">
-                <li>NLP &amp; Time Line Therapy</li>
-                <li>Hypnosis &amp; DiSC profiles</li>
-                <li>Let go of what held you back</li>
-              </ul>
-              <div class="path-card__foot"><span class="small muted">Online · In person</span><span class="path-card__go">{{icon:arrow-ur}}</span></div>
-            </div>
+          <a class="svc" href="life-coaching.html" data-img="assets/img/life.webp" data-cursor="Explore">
+            <span class="svc__num">ii.</span>
+            <span class="svc__title">Intuitive <em>Life</em></span>
+            <span class="svc__thumb"><img src="assets/img/life.webp" alt="" width="1600" height="1066" loading="lazy"></span>
+            <span class="svc__desc">Reconnect and recharge with your authentic, soul-centred self — and let go of what has held you back.</span>
+            <span class="svc__meta">For you</span>
+            <span class="svc__arrow">{{icon:arrow-ur}}</span>
           </a>
-          <a class="path-card" href="workshops.html" data-cursor="Explore">
-            <div class="path-card__media">
-              <span class="path-card__tag">For teams</span>
-              <span class="path-card__num">03</span>
-              <img src="assets/img/virtual.webp" alt="A virtual team learning session on a laptop" width="1600" height="1066" loading="lazy">
-            </div>
-            <div class="path-card__body">
-              <h3 class="h3">Virtual <em>Learning</em></h3>
-              <p>Learn skills, gain insight and reconnect — in sessions so engaging participants are amazed how fast the time goes.</p>
-              <ul class="path-card__list">
-                <li>Leadership &amp; communication</li>
-                <li>Conflict &amp; stress management</li>
-                <li>The Spring Reset program</li>
-              </ul>
-              <div class="path-card__foot"><span class="small muted">Live on Zoom</span><span class="path-card__go">{{icon:arrow-ur}}</span></div>
-            </div>
+          <a class="svc" href="leadership.html#career" data-img="assets/img/anne-portrait.webp" data-cursor="Explore">
+            <span class="svc__num">iii.</span>
+            <span class="svc__title">Next <em>Career Step</em></span>
+            <span class="svc__thumb"><img src="assets/img/anne-portrait.webp" alt="" width="1200" height="1800" loading="lazy" style="object-position:50% 25%"></span>
+            <span class="svc__desc">A client favourite. Take stock, update your goals and open the door to a happier, healthier working life.</span>
+            <span class="svc__meta">For transitions</span>
+            <span class="svc__arrow">{{icon:arrow-ur}}</span>
           </a>
+          <a class="svc" href="workshops.html" data-img="assets/img/virtual.webp" data-cursor="Explore">
+            <span class="svc__num">iv.</span>
+            <span class="svc__title">Workshops <em>&amp; Talks</em></span>
+            <span class="svc__thumb"><img src="assets/img/virtual.webp" alt="" width="1600" height="1066" loading="lazy"></span>
+            <span class="svc__desc">Fun, experiential virtual learning on leadership, communication, conflict and stress — plus the Spring Reset.</span>
+            <span class="svc__meta">For teams</span>
+            <span class="svc__arrow">{{icon:arrow-ur}}</span>
+          </a>
+        </div>
+        <div class="btn-row mt-l" data-reveal>
+          <a class="link-arrow" href="coaching.html"><span>How one-on-one coaching works</span> {{icon:arrow}}</a>
         </div>
       </div>
     </section>
@@ -167,7 +147,7 @@
           </div>
         </div>
         <div class="split__copy">
-          <span class="label">Meet Anne</span>
+          <span class="label">IV. &nbsp;Meet Anne</span>
           <h2 class="h2" data-split>Coach. Speaker. <em>Author.</em> Ally.</h2>
           <p class="lead" data-reveal>Before coaching, Anne held senior leadership roles in telecommunications and manufacturing — building high-performing global teams, powerful results and dynamic environments.</p>
           <p class="muted" data-reveal>Today she combines rock-solid leadership know-how with thirteen professional designations and a wisdom beyond her years. When you work with Anne, you work with all of you — on the job and off.</p>
@@ -183,7 +163,7 @@
     <section class="section dark" data-theme="dark">
       <div class="container dims">
         <div class="dims__copy">
-          <span class="label">The whole-person approach</span>
+          <span class="label">V. &nbsp;The whole-person approach</span>
           <h2 class="h2" data-split>It's not just work. Not just life. <em>It's all of you.</em></h2>
           <p class="lead muted" data-reveal>You are a physical, emotional, spiritual and intellectual being. Coaching with Anne encompasses all of it — and that makes a better you. The you that you've been searching for, longing for, hoping to reconnect with.</p>
           <div class="btn-row mt-l" data-reveal>
@@ -207,7 +187,7 @@
       <div class="method__pin">
         <div class="container method__head">
           <div>
-            <span class="label">How the work works</span>
+            <span class="label">VI. &nbsp;How the work works</span>
             <h2 class="h2 mt-m" data-split>From stuck to <em>unstoppable.</em></h2>
           </div>
           <div class="method__progress" aria-hidden="true"><i></i></div>
@@ -254,7 +234,7 @@
       <div class="container quotes" data-quotes>
         <div class="quotes__side">
           <div>
-            <span class="label">Client stories</span>
+            <span class="label">VII. &nbsp;Client stories</span>
             <h2 class="h3 mt-m" data-split>Leaders who found <em>their knowing.</em></h2>
           </div>
           <div>

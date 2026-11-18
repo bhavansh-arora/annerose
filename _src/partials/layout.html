@@ -6,7 +6,7 @@
   <title>{{page.title}}</title>
   <meta name="description" content="{{page.description}}">
   <link rel="canonical" href="{{page.canonical}}">
-  <meta name="theme-color" content="#140f10">
+  <meta name="theme-color" content="#4a1520">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Coach Anne Rose">
   <meta property="og:title" content="{{page.title}}">
@@ -15,8 +15,9 @@
   <meta property="og:image" content="https://www.annerose.com/{{page.og_image}}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="assets/fonts/fraunces-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/bodoni-moda-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/bodoni-moda-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/jost-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/fonts.css">
   <link rel="stylesheet" href="assets/css/main.css">
   <script>
@@ -41,10 +42,13 @@
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="preloader" aria-hidden="true">
+    <svg class="preloader__seal" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50"/><circle cx="60" cy="60" r="56"/></svg>
     <div class="preloader__word"><span>A</span><span>n</span><span>n</span><span>e</span><span>&nbsp;</span><span><em>R</em></span><span><em>o</em></span><span><em>s</em></span><span><em>e</em></span></div>
     <div class="preloader__tag">Embrace the knowing within</div>
     <div class="preloader__count">00%</div>
   </div>
+
+  <div class="curtain" aria-hidden="true"><span class="curtain__mark">Anne <em>Rose</em></span></div>
 
   {{> header}}
 
