@@ -98,7 +98,8 @@
   function animateSplit(el, delay) {
     var words = $$(".split-line > span", el);
     return gsap.fromTo(words, { yPercent: 118 }, {
-      yPercent: 0, duration: 1.5, ease: "expo.out", stagger: 0.05, delay: delay || 0
+      yPercent: 0, duration: 1.5, ease: "expo.out", stagger: 0.05, delay: delay || 0,
+      onComplete: function () { $$(".split-line", el).forEach(function (l) { l.classList.add("is-done"); }); }
     });
   }
 
@@ -136,7 +137,7 @@
     if (heroRise) tl.to(heroRise, { yPercent: 0, autoAlpha: 1, duration: 1.8 }, 0.45);
     if (pops.length) tl.to(pops, { autoAlpha: 1, y: 0, scale: 1, duration: 1.2, stagger: 0.09 }, 0.8);
     heroSplits.forEach(function (el, i) {
-      tl.to($$(".split-line > span", el), { yPercent: 0, duration: 1.6, stagger: 0.07 }, 0.2 + i * 0.12);
+      tl.to($$(".split-line > span", el), { yPercent: 0, duration: 1.6, stagger: 0.07, onComplete: function () { $$(".split-line", el).forEach(function (l) { l.classList.add("is-done"); }); } }, 0.2 + i * 0.12);
     });
     tl.to(heroBits, { autoAlpha: 1, y: 0, duration: 1.4, stagger: 0.1 }, 0.8);
   }

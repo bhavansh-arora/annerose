@@ -259,7 +259,8 @@ strong, b { font-weight: 600; }
 /* ---------- Reveal helpers ---------- */
 .js [data-reveal] { opacity: 0; transform: translateY(30px); }
 .js [data-reveal].is-in { opacity: 1; transform: none; transition: opacity 1s var(--ease), transform 1.2s var(--ease); }
-.split-line { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 .08em .12em 0; margin: 0 -.08em -.12em 0; }
+.split-line { display: inline-block; overflow: hidden; vertical-align: top; padding: .06em .14em .3em .1em; margin: -.06em -.14em -.3em -.1em; }
+.split-line.is-done { overflow: visible; }
 .split-line > span { display: inline-block; will-change: transform; }
 .js [data-clip] { clip-path: inset(100% 0 0 0); }
 
