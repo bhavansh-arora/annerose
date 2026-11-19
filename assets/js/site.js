@@ -286,7 +286,8 @@
       if (url.origin !== location.origin) return;
       if (url.pathname === location.pathname && url.hash) return;
       e.preventDefault();
-      closeMenu();
+      /* Keep the menu open: the panels cover straight over it. Closing it
+         here would slide it away and flash the page underneath. */
       if (ctTitle) ctTitle.innerHTML = titleFor(url.pathname);
       store.set("ar_pt", "1");
       store.set("ar_pt_t", titleFor(url.pathname));
@@ -301,7 +302,7 @@
       if (lastCol) lastCol.addEventListener("transitionend", function (ev) { if (ev.propertyName === "transform") setTimeout(go, 60); }, { once: true });
       setTimeout(go, 1150);
     });
-    window.addEventListener("pageshow", function (e) { if (e.persisted) resetCurtain(); });
+    window.addEventListener("pageshow", function (e) { if (e.persisted) { closeMenu(); resetCurtain(); } });
 
     /* Warm up the next page as soon as a finger/cursor reaches a link */
     var prefetched = {};
