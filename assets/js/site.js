@@ -120,6 +120,7 @@
   if (pre) {
     if (doc.classList.contains("no-preloader") || reduced) {
       if (!doc.classList.contains("pt-enter")) uiIvory();
+      doc.classList.remove("is-preloading");
       pre.remove();
       body.classList.add("is-loaded");
     } else {
@@ -147,6 +148,7 @@
   function finishPreloader() {
     pre.style.transition = "clip-path 1.1s cubic-bezier(.65,0,.35,1)";
     pre.style.clipPath = "inset(0 0 100% 0)";
+    doc.classList.remove("is-preloading");
     setTimeout(uiIvory, 500);
     body.classList.add("is-loaded");
     document.dispatchEvent(new CustomEvent("site:loaded"));

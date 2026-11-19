@@ -1311,3 +1311,6 @@ html.ui-wine { background: var(--wine-2); }
 @media (max-width: 760px) {
   .stack-card { top: calc(env(safe-area-inset-top, 0px) + 14px + var(--i, 0) * 12px); }
 }
+/* While the first-visit loader runs, the whole page canvas is wine so nothing light can show behind iOS toolbars */
+html.is-preloading, html.is-preloading body { background: var(--wine-2); }
+html.is-preloading body > :not(.preloader):not(.curtain):not(script) { visibility: hidden; }
