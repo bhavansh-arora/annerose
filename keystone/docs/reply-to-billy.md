@@ -10,22 +10,18 @@ Thanks for getting back to me. Rather than send a list of written ideas, we buil
 
 **Preview:** [LINK]
 
-It works on phones, tablets and desktop. Here's what we added and how each part helps turn project enquiries into signed agreements:
+It works on phones, tablets and desktop. Three things stand out:
 
-**1. A savings estimator on the homepage.** A facilities director picks their sector, slides to their annual electricity spend and sees an estimated year-one saving, 25-year savings, an indicative system size and "$0 upfront" straight away. The estimate is based on the results your clients have reported publicly (Georgetown 12%+, Abingdon 18%+, the JCC 20%+). When they click "Get my real numbers", their inputs carry into the enquiry form, so they don't have to type them again.
+**First, it's easy to start a project.** Today a visitor has to find the Contact page to reach you. The preview has "Start a project" and "Book a free feasibility review" throughout: in the header and top bar of every page, at the end of every page, and in a call bar that stays at the bottom of the screen on mobile. The enquiry form takes about 90 seconds and sorts each enquiry by sector, so municipal, water, school, non-profit, business and landowner leads reach you already labelled. It also routes each one by state to the right office (St. Charles, Richmond or Paoli) and flags how ready they are to move.
 
-**2. A four-step project enquiry form that qualifies and routes each lead.** Visitors choose their organization type, site (rooftop, ground-mount, canopy or open land), annual spend or acreage, state and timing. Each enquiry is then:
-- **routed by state** to the right office (Midwest to St. Charles, Mid-Atlantic and Southeast to Richmond, everything else to Paoli)
-- **given a priority score** (A hot / B warm / C nurture), so your team knows which board is ready this budget cycle and which is still exploring
-- **delivered to your inbox or CRM** with all the details filled in. It can also trigger an automatic confirmation email and a booking link, so nobody waits for a callback.
+**Second, your projects do the selling.** Instead of uncaptioned photos, each featured project shows the client, the system size and the result they reported: Crown Holdings' 924.6 kW array offsetting about a third of the plant's power, Georgetown and Abingdon's 562 kW with 12–18%+ year-one savings, and the JCC's 223.56 kW with 20%+ annual savings. All 19 featured projects (23.9 MW) can be filtered by sector and state, four case studies carry your clients' own words, and a map shows where you've built across seven states.
 
-**3. A land check for utility-scale landowners.** Four quick questions (acreage, distance to three-phase power or a substation, land use, slope) give the landowner a site fit score and an indicative MW capacity, then invite them to request a free desktop study. This should bring in better land leads without adding work for your development team.
+**Third, your model is clear in seconds.** The no-upfront-cost approach is laid out in three simple steps: you find the site and model the savings, your fund pays for the build, and the client buys the power below utility rates. A savings estimator then lets an organization pick its sector, enter its annual electricity spend and see its estimated year-one savings, 25-year savings and system size. When they're ready, those numbers carry straight into the enquiry form.
 
-**4. Separate pages for each type of buyer.** Municipalities and water authorities, schools and universities, commercial and industrial clients, non-profits, and utilities and landowners each get their own section, with a proof point from your own portfolio. There's also a plain-English comparison of a PPA against buying the system, and answers to the questions boards usually ask before they sign.
-
-**5. Your track record, up front.** Anthony's 300+ MW and Conergy Americas leadership, your 50+ MW of distributed generation, all 19 featured projects (23.9 MW, filterable by sector), four detailed case studies with quotes from mayors and plant managers, and a map of your footprint across seven states and three offices.
-
-**6. Small details that keep visitors moving.** A live counter of clean energy produced, a sticky "Call / Start a project" bar on mobile, and the right phone number for each office.
+We also added:
+- **A land check for utility-scale landowners.** Four quick questions give a site fit score and an indicative MW capacity, then invite them to request a free desktop study.
+- **A section for each type of client,** plus a plain-English comparison of a PPA against buying panels, and answers to the questions boards usually ask.
+- **Founder profiles** for you and Anthony, built around your track records (300+ MW and Conergy Americas for Anthony, 50+ MW of distributed generation for you).
 
 None of this replaces your existing content; it builds on what's already there. It can go live on your current domain, and the form can connect to the email or CRM you already use.
 
@@ -41,5 +37,5 @@ Code Bunny
 - **Savings figures:** the estimator uses the 12% to 20%+ year-one savings from Keystone's own press releases and is labeled "illustrative". Ask Billy if he'd like different ranges or a different minimum project size (the site says roughly 200 kW and up).
 - **Enquiry email:** without a form endpoint, enquiries open a pre-filled email to billy@keystoneph.com (`email` in `keystone/assets/js/config.js`). Confirm which inbox or CRM (HubSpot, Salesforce and so on) leads should go to, then set `formEndpoint`.
 - **Booking link:** add a scheduling link (`bookingUrl`) and the thank-you screen will offer "Book a 20-minute intro call".
-- **Photos:** the project images are licensed stock photos (Unsplash / Pexels). Swap in Keystone's own project and founder photos if he has them; the founder cards are built to look finished without photos too.
+- **Photos:** the project images are licensed stock photos (Unsplash / Pexels). Swap in Keystone's own project and founder photos if he has them; the founder profiles are built to look finished without photos too.
 - **Reply promise:** the site says "within one business day". Change `replyPromise` if that's not right.
