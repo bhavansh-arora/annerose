@@ -1297,3 +1297,17 @@ fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
 .nav__sub a:hover { background: var(--ivory); }
 .nav__sub a[aria-current="page"] { background: var(--wine); color: var(--ivory); }
 .nav__sub a[aria-current="page"] small { color: var(--muted-light); }
+
+/* ---------- Mobile browser chrome & full-bleed overlays ---------- */
+html { background: var(--ivory); }
+html.ui-wine { background: var(--wine-2); }
+/* Overscan past the screen edges so nothing shows behind iOS toolbars */
+.preloader, .curtain { top: -20vh; height: calc(100vh + 40vh); height: calc(100lvh + 40vh); }
+.preloader__count { bottom: calc(20vh + 28px + env(safe-area-inset-bottom, 0px)); }
+.preloader__tag { bottom: calc(20vh + 36px + env(safe-area-inset-bottom, 0px)); }
+
+/* ---------- Stacking cards: no reserved gap for the (hidden) header ---------- */
+.stack-card { top: calc(96px + var(--i, 0) * 20px); }
+@media (max-width: 760px) {
+  .stack-card { top: calc(env(safe-area-inset-top, 0px) + 14px + var(--i, 0) * 12px); }
+}

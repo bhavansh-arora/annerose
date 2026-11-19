@@ -6,7 +6,7 @@
   <title>{{page.title}}</title>
   <meta name="description" content="{{page.description}}">
   <link rel="canonical" href="{{page.canonical}}">
-  <meta name="theme-color" content="#4a1520">
+  <meta name="theme-color" content="#f5efe6">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Coach Anne Rose">
   <meta property="og:title" content="{{page.title}}">
@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="assets/css/fonts.css">
   <link rel="stylesheet" href="assets/css/main.css">
   <script>
-    (function(d){d.classList.add('js');try{if(sessionStorage.getItem('ar_seen'))d.classList.add('no-preloader');if(sessionStorage.getItem('ar_pt')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('pt-enter');sessionStorage.removeItem('ar_pt');setTimeout(function(){d.classList.remove('pt-enter')},3500)}}catch(e){}})(document.documentElement);
+    (function(d){d.classList.add('js');var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;function wine(){d.classList.add('ui-wine');var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#561526')}try{if(d.classList.contains('no-preloader')||sessionStorage.getItem('ar_seen')||rm)d.classList.add('no-preloader');else wine();if(sessionStorage.getItem('ar_pt')&&!rm){d.classList.add('pt-enter');wine();sessionStorage.removeItem('ar_pt');setTimeout(function(){d.classList.remove('pt-enter','ui-wine')},3500)}}catch(e){}})(document.documentElement);
   </script>
   <script type="application/ld+json">
   {

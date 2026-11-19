@@ -77,6 +77,21 @@ def render(text, meta, depth=0):
     return text
 
 
+def bust_cache(html):
+    """Append ?v=<content hash> to local CSS/JS so browsers fetch fresh files after each change."""
+    import hashlib
+
+    def ver(m):
+        path = m.group(2)
+        f = ROOT / path
+        if not f.is_file():
+            return m.group(0)
+        h = hashlib.md5(f.read_bytes()).hexdigest()[:8]
+        return f'{m.group(1)}{path}?v={h}"'
+
+    return re.sub(r'((?:href|src)=")(assets/(?:css|js|vendor)/[\w.-]+\.(?:css|js))"', ver, html)
+
+
 def build():
     layout = (SRC / "partials" / "layout.html").read_text()
     pages = sorted((SRC / "pages").glob("*.html"))
@@ -92,6 +107,7 @@ def build():
         meta["body"] = "{{BODY}}"
         html = render(layout, meta)
         html = html.replace("{{BODY}}", render(body, meta))
+        html = bust_cache(html)
         (ROOT / page.name).write_text(html)
         print("built", page.name)
 
