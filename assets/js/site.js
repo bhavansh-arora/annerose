@@ -263,7 +263,8 @@
     curtain.classList.add("no-anim");
     doc.classList.remove("pt-enter");
     uiIvory();
-    curtain.classList.remove("is-leaving", "is-covering");
+    curtain.classList.remove("is-leaving", "is-covering", "is-covered");
+    doc.classList.remove("pt-covered");
     void curtain.offsetHeight;
     requestAnimationFrame(function () { requestAnimationFrame(function () { curtain.classList.remove("no-anim"); }); });
   }
@@ -296,7 +297,13 @@
       /* Navigate only once the last visible wine panel has fully landed,
          so the old page can never peek through mid-animation. */
       var gone = false;
-      var go = function () { if (gone) return; gone = true; location.href = url.href; };
+      var go = function () {
+        if (gone) return; gone = true;
+        /* Fully covered: make the overlay itself solid wine and hide the page
+           behind it, so iOS can only show wine under its glass toolbar. */
+        curtain.classList.add("is-covered"); doc.classList.add("pt-covered");
+        location.href = url.href;
+      };
       var wineCols = $$(".curtain__cols--wine i", curtain).filter(function (c) { return c.offsetWidth > 0; });
       var lastCol = wineCols[wineCols.length - 1];
       if (lastCol) lastCol.addEventListener("transitionend", function (ev) { if (ev.propertyName === "transform") setTimeout(go, 60); }, { once: true });

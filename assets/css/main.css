@@ -1407,3 +1407,10 @@ html.is-preloading body > :not(.preloader):not(.curtain):not(script) { visibilit
 .wall__hint { display: none; align-items: center; gap: 8px; font-size: .8rem; font-weight: 600; color: var(--muted); }
 .wall__hint svg { width: 16px; height: 16px; }
 .wall__hint { grid-column: 1 / -1; margin-bottom: -8px; }
+
+/* ---------- Solid overlay while fully covered (iOS glass toolbar samples it) ---------- */
+.curtain.is-covered, .pt-enter .curtain:not(.is-leaving) { background: var(--wine-2); }
+html.pt-covered, html.pt-covered body { background: var(--wine-2); }
+html.pt-covered body > :not(.curtain):not(script) { visibility: hidden; }
+html.pt-enter body { background: var(--wine-2); }
+html.pt-enter .curtain.is-leaving ~ * { visibility: visible; }
