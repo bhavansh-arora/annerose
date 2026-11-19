@@ -232,7 +232,7 @@
     requestAnimationFrame(function () { requestAnimationFrame(function () {
       doc.classList.remove("pt-covered");
       curtain.classList.add("is-leaving");
-      setTimeout(resetCurtain, 1500);
+      setTimeout(resetCurtain, 2100);
     }); });
   }
   /* First load arriving from a full page load (fallback path) */
@@ -240,7 +240,7 @@
     if (ctTitle) ctTitle.innerHTML = titleFor(location.pathname);
     requestAnimationFrame(function () { requestAnimationFrame(function () {
       curtain.classList.add("is-leaving");
-      setTimeout(resetCurtain, 1500);
+      setTimeout(resetCurtain, 2100);
     }); });
   }
 
@@ -269,12 +269,12 @@
       var fin = function () {
         if (done) return; done = true;
         curtain.classList.add("is-covered"); doc.classList.add("pt-covered");
-        resolve();
+        setTimeout(resolve, 500);   /* hold on the page title for a beat */
       };
       var cols = $$(".curtain__cols--wine i", curtain).filter(function (c) { return c.offsetWidth > 0; });
       var last = cols[cols.length - 1];
-      if (last) last.addEventListener("transitionend", function (ev) { if (ev.propertyName === "transform") setTimeout(fin, 40); }, { once: true });
-      setTimeout(fin, 1150);
+      if (last) last.addEventListener("transitionend", function (ev) { if (ev.propertyName === "transform") setTimeout(fin, 60); }, { once: true });
+      setTimeout(fin, 1700);
     });
   }
 

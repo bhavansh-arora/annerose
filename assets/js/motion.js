@@ -185,7 +185,7 @@
         if (heroBits.length) tl.to(heroBits, { autoAlpha: 1, y: 0, duration: 1.4, stagger: 0.1 }, 0.8);
       }
       if (mode === "preloader") document.addEventListener("site:loaded", playHero, { once: true });
-      else if (mode === "enter") gsap.delayedCall(0.45, playHero);
+      else if (mode === "enter") gsap.delayedCall(0.6, playHero);
       else playHero();
 
       /* Other split headings reveal on scroll */
