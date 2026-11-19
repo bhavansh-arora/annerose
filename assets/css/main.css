@@ -1392,3 +1392,18 @@ html.is-preloading body > :not(.preloader):not(.curtain):not(script) { visibilit
   .stack-card { min-height: 230px; padding: 22px; }
   .stack-card p { font-size: 1.45rem; }
 }
+
+/* ---------- Testimonial wall: no auto-motion on phones (text shimmer) ---------- */
+.wall__col { will-change: transform; transform: translate3d(0, 0, 0); backface-visibility: hidden; }
+@keyframes wallUp { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, -50%, 0); } }
+@media (max-width: 760px) {
+  .wall__cols { display: flex; height: auto; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; -webkit-mask-image: none; mask-image: none; margin-inline: calc(var(--gutter) * -1); padding: 4px var(--gutter) 8px; scroll-padding-inline: var(--gutter); }
+  .wall__cols::-webkit-scrollbar { display: none; }
+  .wall__col, .wall__col:nth-child(2), .wall__col:nth-child(3) { display: contents; animation: none; }
+  .wall__col > [aria-hidden="true"] { display: none; }
+  .wall__cols .qcard { flex: 0 0 82%; scroll-snap-align: start; }
+  .wall__hint { display: flex; }
+}
+.wall__hint { display: none; align-items: center; gap: 8px; font-size: .8rem; font-weight: 600; color: var(--muted); }
+.wall__hint svg { width: 16px; height: 16px; }
+.wall__hint { grid-column: 1 / -1; margin-bottom: -8px; }
