@@ -292,9 +292,31 @@
       store.set("ar_pt_t", titleFor(url.pathname));
       curtain.classList.add("is-covering");
       setTimeout(uiWine, 350);
-      setTimeout(function () { location.href = url.href; }, 900);
+      /* Navigate only once the last visible wine panel has fully landed,
+         so the old page can never peek through mid-animation. */
+      var gone = false;
+      var go = function () { if (gone) return; gone = true; location.href = url.href; };
+      var wineCols = $$(".curtain__cols--wine i", curtain).filter(function (c) { return c.offsetWidth > 0; });
+      var lastCol = wineCols[wineCols.length - 1];
+      if (lastCol) lastCol.addEventListener("transitionend", function (ev) { if (ev.propertyName === "transform") setTimeout(go, 60); }, { once: true });
+      setTimeout(go, 1150);
     });
     window.addEventListener("pageshow", function (e) { if (e.persisted) resetCurtain(); });
+
+    /* Warm up the next page as soon as a finger/cursor reaches a link */
+    var prefetched = {};
+    var warm = function (e) {
+      var a = e.target.closest && e.target.closest("a[href]");
+      if (!a) return;
+      var href = a.getAttribute("href");
+      if (!href || href.charAt(0) === "#" || /^(mailto:|tel:|https?:)/i.test(href)) return;
+      var u = new URL(a.href, location.href);
+      if (u.origin !== location.origin || u.pathname === location.pathname || prefetched[u.pathname]) return;
+      prefetched[u.pathname] = true;
+      var l = document.createElement("link"); l.rel = "prefetch"; l.href = u.pathname; document.head.appendChild(l);
+    };
+    document.addEventListener("touchstart", warm, { passive: true });
+    document.addEventListener("mouseover", warm, { passive: true });
   }
 
   /* ---------- Marquees: clone group for a seamless loop ---------- */

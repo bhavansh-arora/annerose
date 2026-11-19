@@ -236,11 +236,12 @@ strong, b { font-weight: 600; }
 .curtain__cols i { display: block; margin-right: -1px; transform: translateY(101%); transition: transform .75s var(--ease-in-out); }
 .curtain__cols--gold i { background: var(--gold-light); }
 .curtain__cols--wine i { background: radial-gradient(140% 70% at 50% 100%, #7a1f35, var(--wine) 60%, var(--wine-2)); }
-.curtain__cols i:nth-child(2) { transition-delay: .05s; } .curtain__cols i:nth-child(3) { transition-delay: .1s; }
-.curtain__cols i:nth-child(4) { transition-delay: .15s; } .curtain__cols i:nth-child(5) { transition-delay: .2s; }
-.curtain__cols--wine i:nth-child(1) { transition-delay: .12s; } .curtain__cols--wine i:nth-child(2) { transition-delay: .17s; }
-.curtain__cols--wine i:nth-child(3) { transition-delay: .22s; } .curtain__cols--wine i:nth-child(4) { transition-delay: .27s; }
-.curtain__cols--wine i:nth-child(5) { transition-delay: .32s; }
+.curtain.is-covering .curtain__cols i { transition-duration: .6s; }
+.curtain__cols i:nth-child(2) { transition-delay: .04s; } .curtain__cols i:nth-child(3) { transition-delay: .08s; }
+.curtain__cols i:nth-child(4) { transition-delay: .12s; } .curtain__cols i:nth-child(5) { transition-delay: .16s; }
+.curtain__cols--wine i:nth-child(1) { transition-delay: .1s; } .curtain__cols--wine i:nth-child(2) { transition-delay: .14s; }
+.curtain__cols--wine i:nth-child(3) { transition-delay: .18s; } .curtain__cols--wine i:nth-child(4) { transition-delay: .22s; }
+.curtain__cols--wine i:nth-child(5) { transition-delay: .26s; }
 .curtain__label { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 18px; text-align: center; color: var(--ivory); padding: 0 var(--gutter); opacity: 0; transform: translateY(30px); transition: opacity .4s ease, transform .7s var(--ease); }
 .curtain__kick { display: inline-flex; align-items: center; gap: 10px; font-size: .7rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--muted-light); }
 .curtain__kick b { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--gold-light); color: var(--wine-2); font-family: var(--f-serif); font-style: italic; font-weight: 400; font-size: 1rem; letter-spacing: 0; text-transform: none; }
