@@ -1361,3 +1361,33 @@ html.is-preloading body > :not(.preloader):not(.curtain):not(script) { visibilit
 @media (max-width: 1024px), (hover: none) {
   .stack-card { box-shadow: 0 -10px 24px -18px rgba(25, 19, 19, .35); }
 }
+
+/* ==========================================================================
+   Menu as a drop-down sheet (sized to content) + dimmed backdrop
+   ========================================================================== */
+.menu-backdrop { position: fixed; left: 0; right: 0; top: -20vh; height: calc(100lvh + 40vh); z-index: 140; background: rgba(28, 6, 12, .5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility 0s linear .5s; }
+.menu-open .menu-backdrop { opacity: 1; visibility: visible; transition: opacity .5s ease, visibility 0s; }
+.menu { top: var(--frame); left: var(--frame); right: var(--frame); bottom: auto; height: auto; max-height: calc(100vh - var(--frame) * 2); max-height: calc(100dvh - var(--frame) * 2); box-shadow: 0 40px 80px -30px rgba(20, 4, 8, .6); }
+.menu__inner { min-height: 0; }
+@media (max-width: 760px) {
+  .menu { top: 8px; left: 8px; right: 8px; bottom: auto; inset: 8px 8px auto 8px; }
+  .menu__inner { padding-bottom: 22px; }
+}
+
+/* ==========================================================================
+   "Sound familiar?" cards: swipe carousel on touch/tablet (no sticky = no jitter)
+   ========================================================================== */
+.stack-dots { display: none; }
+@media (max-width: 1024px) {
+  .stack-sec { overflow: visible; }
+  .stack { grid-column: 1 / -1; display: flex; gap: 10px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-inline: calc(var(--gutter) * -1); padding: 4px var(--gutter) 6px; scroll-padding-inline: var(--gutter); }
+  .stack::-webkit-scrollbar { display: none; }
+  .stack-card { position: relative; top: auto !important; flex: 0 0 min(84%, 440px); min-height: 260px; scroll-snap-align: start; transform: none !important; box-shadow: none; }
+  .stack-dots { grid-column: 1 / -1; display: flex; justify-content: center; gap: 6px; margin-top: 4px; }
+  .stack-dots i { width: 8px; height: 8px; border-radius: 999px; background: var(--line-strong); transition: width .4s var(--ease), background .4s; }
+  .stack-dots i.is-on { width: 26px; background: var(--wine); }
+}
+@media (max-width: 760px) {
+  .stack-card { min-height: 230px; padding: 22px; }
+  .stack-card p { font-size: 1.45rem; }
+}

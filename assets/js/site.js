@@ -105,6 +105,26 @@
     var menu = $(".menu");
     if (menu) menu.setAttribute("inert", "");
   }
+  var backdrop = $(".menu-backdrop");
+  if (backdrop) backdrop.addEventListener("click", function () { closeMenu(); });
+
+  /* ---------- Mobile carousel dots for the stacking cards ---------- */
+  $$("[data-stack]").forEach(function (track) {
+    var dots = $$(".stack-dots i", track.parentNode);
+    if (!dots.length) return;
+    var cards = $$(".stack-card", track);
+    var tickingDots = false;
+    track.addEventListener("scroll", function () {
+      if (tickingDots) return; tickingDots = true;
+      requestAnimationFrame(function () {
+        var mid = track.scrollLeft + track.clientWidth / 2, best = 0, bestD = Infinity;
+        cards.forEach(function (c, i) { var d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (d < bestD) { bestD = d; best = i; } });
+        dots.forEach(function (d, i) { d.classList.toggle("is-on", i === best); });
+        tickingDots = false;
+      });
+    }, { passive: true });
+  });
+
   if (toggle) toggle.addEventListener("click", function () {
     body.classList.contains("menu-open") ? closeMenu() : openMenu();
   });

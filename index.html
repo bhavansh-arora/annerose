@@ -33,7 +33,7 @@
   <link rel="preload" href="assets/fonts/instrument-serif-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-tight-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/fonts.css?v=b056bc4e">
-  <link rel="stylesheet" href="assets/css/main.css?v=59852b0d">
+  <link rel="stylesheet" href="assets/css/main.css?v=626fa106">
   <script>
     (function(d){d.classList.add('js');var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;function wine(){d.classList.add('ui-wine');var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#561526')}try{if(d.classList.contains('no-preloader')||sessionStorage.getItem('ar_seen')||rm)d.classList.add('no-preloader');else{wine();d.classList.add('is-preloading')}if(sessionStorage.getItem('ar_pt')&&!rm){d.classList.add('pt-enter');wine();sessionStorage.removeItem('ar_pt');setTimeout(function(){d.classList.remove('pt-enter','ui-wine')},3500)}}catch(e){}})(document.documentElement);
   </script>
@@ -103,6 +103,7 @@
     </div>
   </header>
 
+  <div class="menu-backdrop" aria-hidden="true"></div>
   <div class="menu" id="site-menu" inert data-lenis-prevent>
     <div class="container menu__inner">
       <ul class="menu__list">
@@ -242,12 +243,13 @@
             <a class="link-arrow" href="#compass"><span>Take the Clarity Compass</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           </div>
         </div>
-        <div class="stack">
+        <div class="stack" data-stack>
           <div class="stack-card"><span class="deco deco--ring"></span><span class="deco deco--ring2"></span><div class="stack-card__n"><span>You are</span><b>01</b></div><p>Intelligent. An accomplished <em>leader, team member and family member.</em></p></div>
           <div class="stack-card"><span class="deco deco--arch"></span><span class="deco deco--arch2"></span><div class="stack-card__n"><span>You're expected</span><b>02</b></div><p>To be the one with <em>all the answers</em>, at work and at home.</p></div>
           <div class="stack-card"><span class="deco deco--sun"></span><span class="deco deco--star"><svg viewBox="0 0 40 40" fill="currentColor" aria-hidden="true"><path d="M20 2c1.2 11.6 6.4 16.8 18 18-11.6 1.2-16.8 6.4-18 18-1.2-11.6-6.4-16.8-18-18C13.6 18.8 18.8 13.6 20 2z"/></svg></span><div class="stack-card__n"><span>And yet</span><b>03</b></div><p>When it comes to what <em>you</em> really want, for your work and life, you're at a loss.</p></div>
           <div class="stack-card"><span class="deco deco--dots"></span><span class="deco deco--half"></span><div class="stack-card__n"><span>The shift</span><b>04</b></div><p>You know you want change. You want more. <em>Anne helps you find the details.</em></p></div>
         </div>
+        <div class="stack-dots" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i></div>
       </div>
     </section>
 
@@ -720,7 +722,7 @@
   <script src="assets/vendor/ScrollTrigger.min.js?v=ba1fa78e" defer></script>
   <script src="assets/vendor/lenis.min.js?v=79e3a064" defer></script>
   <script src="assets/js/config.js?v=aedf55f6" defer></script>
-  <script src="assets/js/site.js?v=1b91c401" defer></script>
+  <script src="assets/js/site.js?v=f96d487d" defer></script>
   <script src="assets/js/motion.js?v=f550dc0e" defer></script>
 </body>
 </html>
