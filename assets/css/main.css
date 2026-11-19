@@ -1415,7 +1415,9 @@ html.pt-covered body > :not(.curtain):not(script) { visibility: hidden; }
 html.pt-enter body { background: var(--wine-2); }
 html.pt-enter .curtain.is-leaving ~ * { visibility: visible; }
 
-/* Cross-document view transition: Safari 18.2+/Chrome hold the old (covered)
-   page on screen until the new page is ready to paint, so no blank frame. */
-@view-transition { navigation: auto; }
-::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+/* Overlays: symmetric pixel overscan (no vh/lvh, which iOS changes as its
+   toolbars resize). Equal top/bottom keeps the title centred on screen. */
+.preloader, .curtain { top: -300px !important; bottom: -300px !important; left: 0; right: 0; height: auto !important; }
+.preloader__count { bottom: calc(300px + 28px + env(safe-area-inset-bottom, 0px)); }
+.preloader__tag { bottom: calc(300px + 36px + env(safe-area-inset-bottom, 0px)); }
+.menu-backdrop { top: -300px; bottom: -300px; height: auto; }
