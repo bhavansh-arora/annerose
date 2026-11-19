@@ -265,6 +265,7 @@
     uiIvory();
     curtain.classList.remove("is-leaving", "is-covering", "is-covered");
     doc.classList.remove("pt-covered");
+    doc.style.backgroundColor = "";
     void curtain.offsetHeight;
     requestAnimationFrame(function () { requestAnimationFrame(function () { curtain.classList.remove("no-anim"); }); });
   }
@@ -323,6 +324,11 @@
       prefetched[u.pathname] = true;
       var l = document.createElement("link"); l.rel = "prefetch"; l.href = u.pathname; document.head.appendChild(l);
     };
+    /* Home is the heaviest page: fetch it quietly in the background */
+    if (!/index\.html$|\/$/.test(location.pathname)) {
+      var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 1200); };
+      idle(function () { warm({ target: { closest: function () { var a = document.createElement("a"); a.href = "index.html"; a.setAttribute("href", "index.html"); return a; } } }); });
+    }
     document.addEventListener("touchstart", warm, { passive: true });
     document.addEventListener("mouseover", warm, { passive: true });
   }

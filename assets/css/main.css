@@ -1414,3 +1414,8 @@ html.pt-covered, html.pt-covered body { background: var(--wine-2); }
 html.pt-covered body > :not(.curtain):not(script) { visibility: hidden; }
 html.pt-enter body { background: var(--wine-2); }
 html.pt-enter .curtain.is-leaving ~ * { visibility: visible; }
+
+/* Cross-document view transition: Safari 18.2+/Chrome hold the old (covered)
+   page on screen until the new page is ready to paint, so no blank frame. */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
