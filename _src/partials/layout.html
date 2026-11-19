@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="assets/css/fonts.css">
   <link rel="stylesheet" href="assets/css/main.css">
   <script>
-    (function(d){d.classList.add('js');var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;function wine(){d.classList.add('ui-wine');var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#561526')}try{if(d.classList.contains('no-preloader')||sessionStorage.getItem('ar_seen')||rm)d.classList.add('no-preloader');else{wine();d.classList.add('is-preloading')}if(sessionStorage.getItem('ar_pt')&&!rm){d.classList.add('pt-enter');wine();sessionStorage.removeItem('ar_pt');setTimeout(function(){d.classList.remove('pt-enter','ui-wine')},3500)}}catch(e){}})(document.documentElement);
+    (function(d){d.classList.add('js');var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;function wine(){d.classList.add('ui-wine');var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#561526')}try{var pt=sessionStorage.getItem('ar_pt');if(pt||d.classList.contains('no-preloader')||sessionStorage.getItem('ar_seen')||rm)d.classList.add('no-preloader');else{wine();d.classList.add('is-preloading')}sessionStorage.setItem('ar_seen','1');if(sessionStorage.getItem('ar_pt')&&!rm){d.classList.add('pt-enter');wine();sessionStorage.removeItem('ar_pt');setTimeout(function(){d.classList.remove('pt-enter','ui-wine')},3500)}}catch(e){}})(document.documentElement);
   </script>
   <script type="application/ld+json">
   {
