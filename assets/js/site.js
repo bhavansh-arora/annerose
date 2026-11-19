@@ -1,5 +1,8 @@
 /* ==========================================================================
-   Anne Rose — interface behaviour (menu, header, cursor, quiz, forms …)
+   Anne Rose — interface behaviour
+   Global (once): smooth scroll, header, menu, cursor, preloader, and
+   in-place page transitions. Per page: initPage(root) wires up the content
+   of <main>; it runs on load and again after every in-place page swap.
    ========================================================================== */
 (function () {
   "use strict";
@@ -17,6 +20,12 @@
     get: function (k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } },
     set: function (k, v) { try { window.sessionStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } }
   };
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
+  /* Per-page cleanup hooks (timers, observers, rAF loops) */
+  var cleanups = [];
+  function onCleanup(fn) { cleanups.push(fn); }
+  function runCleanups() { cleanups.splice(0).forEach(function (fn) { try { fn(); } catch (e) { /* ignore */ } }); }
 
   /* ---------- Smooth scroll (Lenis) ---------- */
   var lenis = null;
@@ -28,29 +37,25 @@
       requestAnimationFrame(raf);
     }
   }
+  function scrollToEl(target) {
+    if (lenis) lenis.scrollTo(target, { offset: -20 });
+    else target.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+  }
+  function jumpTop() {
+    if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
+    window.scrollTo(0, 0);
+  }
 
-  /* In-page anchors through Lenis */
-  $$('a[href^="#"]').forEach(function (a) {
-    a.addEventListener("click", function (e) {
-      var id = a.getAttribute("href");
-      if (id.length < 2) return;
-      var target = document.querySelector(id);
-      if (!target) return;
-      e.preventDefault();
-      closeMenu();
-      if (lenis) lenis.scrollTo(target, { offset: -20 });
-      else target.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
-    });
-  });
-
-  /* ---------- Config wiring ---------- */
-  $$("[data-book]").forEach(function (el) {
-    if (CFG.bookingUrl) {
+  /* ---------- Booking links ---------- */
+  function wireBooking(root) {
+    if (!CFG.bookingUrl) return;
+    $$("[data-book]", root).forEach(function (el) {
       el.setAttribute("href", CFG.bookingUrl);
       el.setAttribute("target", "_blank");
       el.setAttribute("rel", "noopener");
-    }
-  });
+    });
+  }
+  wireBooking(document);
   $$("[data-year]").forEach(function (el) { el.textContent = new Date().getFullYear(); });
 
   /* ---------- Header ---------- */
@@ -88,49 +93,30 @@
   /* ---------- Menu ---------- */
   var toggle = $(".menu-toggle");
   var toggleText = $(".menu-toggle__text");
+  var menu = $(".menu");
   function openMenu() {
     body.classList.add("menu-open");
     if (toggle) toggle.setAttribute("aria-expanded", "true");
     if (toggleText) toggleText.textContent = "Close";
     if (lenis) lenis.stop();
-    var menu = $(".menu");
     if (menu) menu.removeAttribute("inert");
   }
-  function closeMenu() {
+  function closeMenu(instant) {
     if (!body.classList.contains("menu-open")) return;
+    if (instant && menu) menu.classList.add("no-anim");
     body.classList.remove("menu-open");
     if (toggle) toggle.setAttribute("aria-expanded", "false");
     if (toggleText) toggleText.textContent = "Menu";
     if (lenis) lenis.start();
-    var menu = $(".menu");
     if (menu) menu.setAttribute("inert", "");
+    if (instant && menu) requestAnimationFrame(function () { requestAnimationFrame(function () { menu.classList.remove("no-anim"); }); });
   }
+  if (toggle) toggle.addEventListener("click", function () { body.classList.contains("menu-open") ? closeMenu() : openMenu(); });
   var backdrop = $(".menu-backdrop");
   if (backdrop) backdrop.addEventListener("click", function () { closeMenu(); });
-
-  /* ---------- Mobile carousel dots for the stacking cards ---------- */
-  $$("[data-stack]").forEach(function (track) {
-    var dots = $$(".stack-dots i", track.parentNode);
-    if (!dots.length) return;
-    var cards = $$(".stack-card", track);
-    var tickingDots = false;
-    track.addEventListener("scroll", function () {
-      if (tickingDots) return; tickingDots = true;
-      requestAnimationFrame(function () {
-        var mid = track.scrollLeft + track.clientWidth / 2, best = 0, bestD = Infinity;
-        cards.forEach(function (c, i) { var d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (d < bestD) { bestD = d; best = i; } });
-        dots.forEach(function (d, i) { d.classList.toggle("is-on", i === best); });
-        tickingDots = false;
-      });
-    }, { passive: true });
-  });
-
-  if (toggle) toggle.addEventListener("click", function () {
-    body.classList.contains("menu-open") ? closeMenu() : openMenu();
-  });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeMenu(); });
 
-  /* ---------- Browser chrome colour (status bar / toolbars) ---------- */
+  /* ---------- Browser chrome colour ---------- */
   var themeMeta = document.querySelector('meta[name="theme-color"]');
   function uiWine() { doc.classList.add("ui-wine"); if (themeMeta) themeMeta.setAttribute("content", "#561526"); }
   function uiIvory() { doc.classList.remove("ui-wine"); if (themeMeta) themeMeta.setAttribute("content", "#f5efe6"); }
@@ -204,47 +190,16 @@
     });
     document.addEventListener("mouseleave", function () { cursor.style.opacity = "0"; });
     document.addEventListener("mouseenter", function () { cursor.style.opacity = "1"; });
-
-    /* Magnetic buttons */
-    $$("[data-magnetic]").forEach(function (el) {
-      el.addEventListener("mousemove", function (e) {
-        var r = el.getBoundingClientRect();
-        el.style.transform = "translate(" + (e.clientX - r.left - r.width / 2) * 0.22 + "px," + (e.clientY - r.top - r.height / 2) * 0.3 + "px)";
-      });
-      el.addEventListener("mouseleave", function () { el.style.transform = ""; });
-    });
-
-    /* Service list: an arched image follows the cursor */
-    $$("[data-hover-list]").forEach(function (list) {
-      var box = document.createElement("div");
-      box.className = "hover-img";
-      box.setAttribute("aria-hidden", "true");
-      var imgs = {};
-      $$(".svc", list).forEach(function (row) {
-        var src = row.getAttribute("data-img");
-        if (!src || imgs[src]) return;
-        var im = new Image(); im.src = src; im.alt = ""; box.appendChild(im); imgs[src] = im;
-      });
-      body.appendChild(box);
-      var bx = 0, by = 0, tx = 0, ty = 0, on = false;
-      (function follow() {
-        bx += (tx - bx) * 0.12; by += (ty - by) * 0.12;
-        box.style.left = bx + "px"; box.style.top = by + "px";
-        requestAnimationFrame(follow);
-      })();
-      list.addEventListener("mousemove", function (e) { tx = e.clientX + 200; ty = e.clientY; if (!on) { bx = tx; by = ty; } });
-      $$(".svc", list).forEach(function (row) {
-        row.addEventListener("mouseenter", function () {
-          on = true; box.classList.add("is-visible");
-          Object.keys(imgs).forEach(function (k) { imgs[k].classList.toggle("is-active", k === row.getAttribute("data-img")); });
-        });
-      });
-      list.addEventListener("mouseleave", function () { on = false; box.classList.toggle("is-visible", false); });
-    });
   }
 
-  /* ---------- Page transitions (wine curtain between pages) ---------- */
+  /* ==========================================================================
+     IN-PLACE PAGE TRANSITIONS
+     The browser never loads a new document: panels cover the screen, the
+     next page's <main> is fetched and swapped in behind them, then they lift.
+     No document swap = no frame where iOS Safari can flash or resize.
+     ========================================================================== */
   var curtain = $(".curtain");
+  var ctTitle = curtain ? $(".curtain__title", curtain) : null;
   var PAGE_TITLES = {
     "index": "Embrace the <em>knowing</em>", "": "Embrace the <em>knowing</em>",
     "about": "About <em>Anne</em>", "coaching": "One-on-one <em>coaching</em>",
@@ -256,20 +211,31 @@
     var key = (path.split("/").pop() || "").replace(/\.html$/, "");
     return PAGE_TITLES[key] || "Anne <em>Rose</em>";
   }
-  var ctTitle = curtain ? $(".curtain__title", curtain) : null;
-  /* Park the panels back below the screen instantly (no visible sweep) */
   function resetCurtain() {
     if (!curtain) return;
     curtain.classList.add("no-anim");
-    doc.classList.remove("pt-enter");
-    uiIvory();
+    doc.classList.remove("pt-enter", "pt-covered");
     curtain.classList.remove("is-leaving", "is-covering", "is-covered");
-    doc.classList.remove("pt-covered");
     doc.style.backgroundColor = "";
+    uiIvory();
     void curtain.offsetHeight;
     requestAnimationFrame(function () { requestAnimationFrame(function () { curtain.classList.remove("no-anim"); }); });
   }
-  /* Arriving from another page: panels lift away */
+  /* Lift the panels off a fully covered screen */
+  function liftCurtain() {
+    if (!curtain) return;
+    curtain.classList.add("no-anim");
+    doc.classList.add("pt-enter");
+    curtain.classList.remove("is-covering", "is-covered");
+    void curtain.offsetHeight;
+    curtain.classList.remove("no-anim");
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      doc.classList.remove("pt-covered");
+      curtain.classList.add("is-leaving");
+      setTimeout(resetCurtain, 1500);
+    }); });
+  }
+  /* First load arriving from a full page load (fallback path) */
   if (curtain && doc.classList.contains("pt-enter")) {
     if (ctTitle) ctTitle.innerHTML = titleFor(location.pathname);
     requestAnimationFrame(function () { requestAnimationFrame(function () {
@@ -277,141 +243,311 @@
       setTimeout(resetCurtain, 1500);
     }); });
   }
-  if (curtain && !reduced) {
-    document.addEventListener("click", function (e) {
-      var a = e.target.closest("a[href]");
-      if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-      if (a.target && a.target !== "_self") return;
-      var href = a.getAttribute("href");
-      if (!href || href.charAt(0) === "#" || /^(mailto:|tel:|javascript:)/i.test(href)) return;
-      var url = new URL(a.href, location.href);
-      if (url.origin !== location.origin) return;
-      if (url.pathname === location.pathname && url.hash) return;
-      e.preventDefault();
-      /* Keep the menu open: the panels cover straight over it. Closing it
-         here would slide it away and flash the page underneath. */
-      if (ctTitle) ctTitle.innerHTML = titleFor(url.pathname);
-      store.set("ar_pt", "1");
-      store.set("ar_pt_t", titleFor(url.pathname));
+
+  /* Page HTML cache (filled by hover/touch prefetch) */
+  var pageCache = {};
+  function fetchPage(path) {
+    if (!pageCache[path]) {
+      pageCache[path] = fetch(path, { credentials: "same-origin" }).then(function (r) {
+        if (!r.ok && r.status !== 404) throw new Error("HTTP " + r.status);
+        return r.text();
+      }).catch(function (err) { delete pageCache[path]; throw err; });
+    }
+    return pageCache[path];
+  }
+  function isPageLink(url) {
+    return url.origin === location.origin && (/\.html$/.test(url.pathname) || /\/$/.test(url.pathname));
+  }
+
+  /* Cover the screen; resolves once fully covered */
+  function cover(path) {
+    return new Promise(function (resolve) {
+      if (ctTitle) ctTitle.innerHTML = titleFor(path);
       curtain.classList.add("is-covering");
       setTimeout(uiWine, 350);
-      /* Navigate only once the last visible wine panel has fully landed,
-         so the old page can never peek through mid-animation. */
-      var gone = false;
-      var go = function () {
-        if (gone) return; gone = true;
-        /* Fully covered: make the overlay itself solid wine and hide the page
-           behind it, so iOS can only show wine under its glass toolbar. */
+      var done = false;
+      var fin = function () {
+        if (done) return; done = true;
         curtain.classList.add("is-covered"); doc.classList.add("pt-covered");
-        location.href = url.href;
+        resolve();
       };
-      var wineCols = $$(".curtain__cols--wine i", curtain).filter(function (c) { return c.offsetWidth > 0; });
-      var lastCol = wineCols[wineCols.length - 1];
-      if (lastCol) lastCol.addEventListener("transitionend", function (ev) { if (ev.propertyName === "transform") setTimeout(go, 60); }, { once: true });
-      setTimeout(go, 1150);
+      var cols = $$(".curtain__cols--wine i", curtain).filter(function (c) { return c.offsetWidth > 0; });
+      var last = cols[cols.length - 1];
+      if (last) last.addEventListener("transitionend", function (ev) { if (ev.propertyName === "transform") setTimeout(fin, 40); }, { once: true });
+      setTimeout(fin, 1150);
     });
-    window.addEventListener("pageshow", function (e) { if (e.persisted) { closeMenu(); resetCurtain(); } });
-
-    /* Warm up the next page as soon as a finger/cursor reaches a link */
-    var prefetched = {};
-    var warm = function (e) {
-      var a = e.target.closest && e.target.closest("a[href]");
-      if (!a) return;
-      var href = a.getAttribute("href");
-      if (!href || href.charAt(0) === "#" || /^(mailto:|tel:|https?:)/i.test(href)) return;
-      var u = new URL(a.href, location.href);
-      if (u.origin !== location.origin || u.pathname === location.pathname || prefetched[u.pathname]) return;
-      prefetched[u.pathname] = true;
-      var l = document.createElement("link"); l.rel = "prefetch"; l.href = u.pathname; document.head.appendChild(l);
-    };
-    /* Home is the heaviest page: fetch it quietly in the background */
-    if (!/index\.html$|\/$/.test(location.pathname)) {
-      var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 1200); };
-      idle(function () { warm({ target: { closest: function () { var a = document.createElement("a"); a.href = "index.html"; a.setAttribute("href", "index.html"); return a; } } }); });
-    }
-    document.addEventListener("touchstart", warm, { passive: true });
-    document.addEventListener("mouseover", warm, { passive: true });
   }
 
-  /* ---------- Marquees: clone group for a seamless loop ---------- */
-  $$(".marquee__track").forEach(function (track) {
-    var group = $(".marquee__group", track);
-    if (!group) return;
-    var clone = group.cloneNode(true);
-    clone.setAttribute("aria-hidden", "true");
-    track.appendChild(clone);
+  var navigating = false;
+  function navigate(url, push) {
+    if (navigating) return;
+    navigating = true;
+    var path = url.pathname;
+    Promise.all([fetchPage(path), cover(path)]).then(function (res) {
+      swapPage(res[0], url, push);
+      navigating = false;
+    }).catch(function () {
+      /* Anything unexpected: fall back to a normal page load */
+      location.href = url.href;
+    });
+  }
+
+  function swapPage(html, url, push) {
+    var next = new DOMParser().parseFromString(html, "text/html");
+    var newMain = next.querySelector("main");
+    if (!newMain) { location.href = url.href; return; }
+
+    /* Tear down the old page (all hidden behind the solid curtain) */
+    if (window.ARMotion) window.ARMotion.destroy();
+    runCleanups();
+    $$(".hover-img").forEach(function (el) { el.remove(); });
+    closeMenu(true);
+
+    /* Swap content, title, meta and current-page markers */
+    var oldMain = $("main");
+    oldMain.replaceWith(document.importNode(newMain, true));
+    document.title = next.title;
+    ["description"].forEach(function (n) {
+      var a = $('meta[name="' + n + '"]'), b = next.querySelector('meta[name="' + n + '"]');
+      if (a && b) a.setAttribute("content", b.getAttribute("content"));
+    });
+    var canon = $('link[rel="canonical"]'), nCanon = next.querySelector('link[rel="canonical"]');
+    if (canon && nCanon) canon.setAttribute("href", nCanon.getAttribute("href"));
+    body.setAttribute("data-page", next.body.getAttribute("data-page") || "");
+    [".site-header .nav", ".menu__list"].forEach(function (sel) {
+      var a = $(sel), b = next.querySelector(sel);
+      if (a && b) a.innerHTML = b.innerHTML;
+    });
+
+    if (push) history.pushState({ ar: 1 }, "", url.href);
+    jumpTop();
+    if (header) header.classList.remove("is-hidden");
+
+    /* Wire up the new page and play its entrance */
+    var main = $("main");
+    wireBooking(main);
+    initPage(main);
+    if (window.ARMotion) window.ARMotion.init(main, "enter");
+    lastY = 0; onScroll();
+
+    if (url.hash) {
+      var t = document.getElementById(url.hash.slice(1));
+      if (t) setTimeout(function () { scrollToEl(t); }, 900);
+    }
+    liftCurtain();
+  }
+
+  /* One delegated click handler for every link on the site */
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest("a[href]");
+    if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    if (a.target && a.target !== "_self") return;
+    var href = a.getAttribute("href");
+    if (!href || /^(mailto:|tel:|javascript:)/i.test(href)) return;
+
+    /* In-page anchors */
+    if (href.charAt(0) === "#") {
+      if (href.length < 2) return;
+      var target = document.querySelector(href);
+      if (!target) return;
+      e.preventDefault();
+      closeMenu();
+      scrollToEl(target);
+      return;
+    }
+    var url = new URL(a.href, location.href);
+    if (!isPageLink(url)) return;
+    if (url.pathname === location.pathname && url.search === location.search) {
+      if (url.hash) {
+        var t = document.getElementById(url.hash.slice(1));
+        if (t) { e.preventDefault(); closeMenu(); scrollToEl(t); }
+      }
+      return;
+    }
+    if (!curtain || reduced) return;           /* plain navigation */
+    e.preventDefault();
+    navigate(url, true);
   });
 
-  /* ---------- Testimonial wall: duplicate columns for a seamless loop ---------- */
-  $$("[data-wall] .wall__col").forEach(function (col) {
-    Array.prototype.slice.call(col.children).forEach(function (card) {
-      var c = card.cloneNode(true); c.setAttribute("aria-hidden", "true"); col.appendChild(c);
+  /* Back / forward */
+  if (curtain && !reduced) {
+    history.replaceState({ ar: 1 }, "", location.href);
+    window.addEventListener("popstate", function () {
+      var url = new URL(location.href);
+      if (!isPageLink(url)) return;
+      navigate(url, false);
+    });
+  }
+  window.addEventListener("pageshow", function (e) { if (e.persisted) { closeMenu(true); resetCurtain(); } });
+
+  /* Warm up pages as soon as a finger/cursor reaches a link */
+  function warmPath(path) { if (path !== location.pathname) fetchPage(path).catch(function () {}); }
+  var warm = function (e) {
+    var a = e.target.closest && e.target.closest("a[href]");
+    if (!a) return;
+    var href = a.getAttribute("href");
+    if (!href || href.charAt(0) === "#" || /^(mailto:|tel:)/i.test(href)) return;
+    var u = new URL(a.href, location.href);
+    if (isPageLink(u)) warmPath(u.pathname);
+  };
+  document.addEventListener("touchstart", warm, { passive: true });
+  document.addEventListener("mouseover", warm, { passive: true });
+  var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 1500); };
+  idle(function () {
+    $$(".site-header .nav a, .menu__list a").forEach(function (a) {
+      var u = new URL(a.href, location.href);
+      if (isPageLink(u)) warmPath(u.pathname);
     });
   });
 
-  /* ---------- FAQ ---------- */
-  $$(".faq__item").forEach(function (item) {
-    var q = $(".faq__q", item);
-    if (!q) return;
-    q.addEventListener("click", function () {
-      var open = item.classList.toggle("is-open");
-      q.setAttribute("aria-expanded", open ? "true" : "false");
-      setTimeout(function () { if (window.ScrollTrigger) window.ScrollTrigger.refresh(); }, 650);
-    });
-  });
+  /* ==========================================================================
+     PER-PAGE INITIALISATION (content inside <main>)
+     ========================================================================== */
+  function initPage(root) {
 
-  /* ---------- Testimonial slider ---------- */
-  $$("[data-quotes]").forEach(function (root) {
-    var slides = $$(".quote-slide", root);
-    var bar = $(".quotes__bar", root);
-    var cur = $(".quotes__count b", root);
-    var total = $(".quotes__count span", root);
-    var i = 0, timer = null, DUR = 9000;
-    if (total) total.textContent = String(slides.length).padStart(2, "0");
-    function show(n) {
-      slides[i].classList.remove("is-active");
-      i = (n + slides.length) % slides.length;
-      slides[i].classList.add("is-active");
-      if (cur) cur.textContent = String(i + 1).padStart(2, "0");
-      run();
-    }
-    function run() {
-      clearTimeout(timer);
-      if (bar) { bar.classList.remove("is-running"); void bar.offsetWidth; bar.style.setProperty("--dur", DUR + "ms"); bar.classList.add("is-running"); }
-      if (!reduced) timer = setTimeout(function () { show(i + 1); }, DUR);
-    }
-    var prev = $("[data-prev]", root), next = $("[data-next]", root);
-    if (prev) prev.addEventListener("click", function () { show(i - 1); });
-    if (next) next.addEventListener("click", function () { show(i + 1); });
-    var started = false;
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) { if (en.isIntersecting && !started) { started = true; run(); } });
-      }, { threshold: 0.3 }).observe(root);
-    } else run();
-  });
-
-  /* ---------- Story filters ---------- */
-  var filterBar = $("[data-filters]");
-  if (filterBar) {
-    var chips = $$(".chip", filterBar);
-    var stories = $$(".story");
-    chips.forEach(function (chip) {
-      var f = chip.getAttribute("data-filter");
-      var n = f === "all" ? stories.length : stories.filter(function (s) { return (s.getAttribute("data-cat") || "").indexOf(f) > -1; }).length;
-      var sup = document.createElement("sup"); sup.textContent = n; chip.appendChild(sup);
-      chip.addEventListener("click", function () {
-        chips.forEach(function (c) { c.classList.remove("is-active"); c.setAttribute("aria-pressed", "false"); });
-        chip.classList.add("is-active"); chip.setAttribute("aria-pressed", "true");
-        stories.forEach(function (s) {
-          var show = f === "all" || (s.getAttribute("data-cat") || "").indexOf(f) > -1;
-          s.classList.toggle("is-hidden", !show);
+    /* Magnetic buttons + service hover image (desktop pointer) */
+    if (finePointer && !reduced) {
+      $$("[data-magnetic]", root).forEach(function (el) {
+        el.addEventListener("mousemove", function (e) {
+          var r = el.getBoundingClientRect();
+          el.style.transform = "translate(" + (e.clientX - r.left - r.width / 2) * 0.22 + "px," + (e.clientY - r.top - r.height / 2) * 0.3 + "px)";
         });
-        if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+        el.addEventListener("mouseleave", function () { el.style.transform = ""; });
+      });
+      $$("[data-hover-list]", root).forEach(function (list) {
+        var box = document.createElement("div");
+        box.className = "hover-img";
+        box.setAttribute("aria-hidden", "true");
+        var imgs = {};
+        $$(".svc", list).forEach(function (row) {
+          var src = row.getAttribute("data-img");
+          if (!src || imgs[src]) return;
+          var im = new Image(); im.src = src; im.alt = ""; box.appendChild(im); imgs[src] = im;
+        });
+        body.appendChild(box);
+        var bx = 0, by = 0, tx = 0, ty = 0, on = false, alive = true;
+        onCleanup(function () { alive = false; box.remove(); });
+        (function follow() {
+          if (!alive) return;
+          bx += (tx - bx) * 0.12; by += (ty - by) * 0.12;
+          box.style.left = bx + "px"; box.style.top = by + "px";
+          requestAnimationFrame(follow);
+        })();
+        list.addEventListener("mousemove", function (e) { tx = e.clientX + 200; ty = e.clientY; if (!on) { bx = tx; by = ty; } });
+        $$(".svc", list).forEach(function (row) {
+          row.addEventListener("mouseenter", function () {
+            on = true; box.classList.add("is-visible");
+            Object.keys(imgs).forEach(function (k) { imgs[k].classList.toggle("is-active", k === row.getAttribute("data-img")); });
+          });
+        });
+        list.addEventListener("mouseleave", function () { on = false; box.classList.toggle("is-visible", false); });
+      });
+    }
+
+    /* Mobile carousel dots for the stacking cards */
+    $$("[data-stack]", root).forEach(function (track) {
+      var dots = $$(".stack-dots i", track.parentNode);
+      if (!dots.length) return;
+      var cards = $$(".stack-card", track);
+      var busy = false;
+      track.addEventListener("scroll", function () {
+        if (busy) return; busy = true;
+        requestAnimationFrame(function () {
+          var mid = track.scrollLeft + track.clientWidth / 2, best = 0, bestD = Infinity;
+          cards.forEach(function (c, i) { var d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (d < bestD) { bestD = d; best = i; } });
+          dots.forEach(function (d, i) { d.classList.toggle("is-on", i === best); });
+          busy = false;
+        });
+      }, { passive: true });
+    });
+
+    /* Marquees: clone group for a seamless loop */
+    $$(".marquee__track", root).forEach(function (track) {
+      var group = $(".marquee__group", track);
+      if (!group || track.children.length > 1) return;
+      var clone = group.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      track.appendChild(clone);
+    });
+
+    /* Testimonial wall: duplicate cards for a seamless loop */
+    $$("[data-wall] .wall__col", root).forEach(function (col) {
+      if (col.dataset.cloned) return; col.dataset.cloned = "1";
+      Array.prototype.slice.call(col.children).forEach(function (card) {
+        var c = card.cloneNode(true); c.setAttribute("aria-hidden", "true"); col.appendChild(c);
       });
     });
+
+    /* FAQ */
+    $$(".faq__item", root).forEach(function (item) {
+      var q = $(".faq__q", item);
+      if (!q) return;
+      q.addEventListener("click", function () {
+        var open = item.classList.toggle("is-open");
+        q.setAttribute("aria-expanded", open ? "true" : "false");
+        setTimeout(function () { if (window.ScrollTrigger) window.ScrollTrigger.refresh(); }, 650);
+      });
+    });
+
+    /* Testimonial slider */
+    $$("[data-quotes]", root).forEach(function (qroot) {
+      var slides = $$(".quote-slide", qroot);
+      var bar = $(".quotes__bar", qroot);
+      var cur = $(".quotes__count b", qroot);
+      var total = $(".quotes__count span", qroot);
+      var i = 0, timer = null, DUR = 9000;
+      if (total) total.textContent = String(slides.length).padStart(2, "0");
+      function show(n) {
+        slides[i].classList.remove("is-active");
+        i = (n + slides.length) % slides.length;
+        slides[i].classList.add("is-active");
+        if (cur) cur.textContent = String(i + 1).padStart(2, "0");
+        run();
+      }
+      function run() {
+        clearTimeout(timer);
+        if (bar) { bar.classList.remove("is-running"); void bar.offsetWidth; bar.style.setProperty("--dur", DUR + "ms"); bar.classList.add("is-running"); }
+        if (!reduced) timer = setTimeout(function () { show(i + 1); }, DUR);
+      }
+      onCleanup(function () { clearTimeout(timer); });
+      var prev = $("[data-prev]", qroot), next = $("[data-next]", qroot);
+      if (prev) prev.addEventListener("click", function () { show(i - 1); });
+      if (next) next.addEventListener("click", function () { show(i + 1); });
+      var started = false;
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) { if (en.isIntersecting && !started) { started = true; run(); } });
+        }, { threshold: 0.3 });
+        io.observe(qroot);
+        onCleanup(function () { io.disconnect(); });
+      } else run();
+    });
+
+    /* Story filters */
+    var filterBar = $("[data-filters]", root);
+    if (filterBar) {
+      var chips = $$(".chip", filterBar);
+      var stories = $$(".story", root);
+      chips.forEach(function (chip) {
+        var f = chip.getAttribute("data-filter");
+        var n = f === "all" ? stories.length : stories.filter(function (s) { return (s.getAttribute("data-cat") || "").indexOf(f) > -1; }).length;
+        if (!chip.querySelector("sup")) { var sup = document.createElement("sup"); sup.textContent = n; chip.appendChild(sup); }
+        chip.addEventListener("click", function () {
+          chips.forEach(function (c) { c.classList.remove("is-active"); c.setAttribute("aria-pressed", "false"); });
+          chip.classList.add("is-active"); chip.setAttribute("aria-pressed", "true");
+          stories.forEach(function (s) {
+            var show = f === "all" || (s.getAttribute("data-cat") || "").indexOf(f) > -1;
+            s.classList.toggle("is-hidden", !show);
+          });
+          if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+        });
+      });
+    }
+
+    initForms(root);
   }
 
+  function initForms(root) {
   /* ==========================================================================
      CLARITY COMPASS — a 60-second fit quiz that routes visitors to the right
      path and carries their answers into the enquiry form.
@@ -445,7 +581,7 @@
   var FORMAT_LABEL = { online: "Online, one-on-one", person: "In person, Toronto", either: "Online or in person", group: "Group / team session" };
   var TIMING_LABEL = { now: "Ready to start now", soon: "In the next month or two", exploring: "Just exploring" };
 
-  $$("[data-compass]").forEach(function (root) {
+  $$("[data-compass]", root).forEach(function (root) {
     var steps = $$(".compass__step", root);
     var result = $(".compass__result", root);
     var bars = $$(".compass__progress i", root);
@@ -507,7 +643,7 @@
      ENQUIRY FORM — multi-step, pre-filled from the compass, posts to an
      automation endpoint (or opens email as a fallback).
      ========================================================================== */
-  var form = $("[data-enquiry]");
+  var form = $("[data-enquiry]", root);
   if (form) {
     var fSteps = $$(".form__step", form);
     var fBars = $$(".form__steps i", form);
@@ -631,4 +767,7 @@
     var preNote = $("[data-prefilled]", form);
     if (preNote && allSet) preNote.hidden = false;
   }
+  }
+
+  initPage($("main") || document);
 })();

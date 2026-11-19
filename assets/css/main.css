@@ -1412,8 +1412,7 @@ html.is-preloading body > :not(.preloader):not(.curtain):not(script) { visibilit
 .curtain.is-covered, .pt-enter .curtain:not(.is-leaving) { background: var(--wine-2); }
 html.pt-covered, html.pt-covered body { background: var(--wine-2); }
 html.pt-covered body > :not(.curtain):not(script) { visibility: hidden; }
-html.pt-enter body { background: var(--wine-2); }
-html.pt-enter .curtain.is-leaving ~ * { visibility: visible; }
+.menu.no-anim, .menu.no-anim *, .menu-backdrop.no-anim { transition: none !important; }
 
 /* Overlays: symmetric pixel overscan (no vh/lvh, which iOS changes as its
    toolbars resize). Equal top/bottom keeps the title centred on screen. */
