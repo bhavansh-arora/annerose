@@ -228,12 +228,21 @@
     return PAGE_TITLES[key] || "Anne <em>Rose</em>";
   }
   var ctTitle = curtain ? $(".curtain__title", curtain) : null;
+  /* Park the panels back below the screen instantly (no visible sweep) */
+  function resetCurtain() {
+    if (!curtain) return;
+    curtain.classList.add("no-anim");
+    doc.classList.remove("pt-enter");
+    curtain.classList.remove("is-leaving", "is-covering");
+    void curtain.offsetHeight;
+    requestAnimationFrame(function () { requestAnimationFrame(function () { curtain.classList.remove("no-anim"); }); });
+  }
   /* Arriving from another page: panels lift away */
   if (curtain && doc.classList.contains("pt-enter")) {
     if (ctTitle) ctTitle.innerHTML = titleFor(location.pathname);
     requestAnimationFrame(function () { requestAnimationFrame(function () {
       curtain.classList.add("is-leaving");
-      setTimeout(function () { doc.classList.remove("pt-enter"); curtain.classList.remove("is-leaving"); }, 1500);
+      setTimeout(resetCurtain, 1500);
     }); });
   }
   if (curtain && !reduced) {
@@ -250,10 +259,11 @@
       closeMenu();
       if (ctTitle) ctTitle.innerHTML = titleFor(url.pathname);
       store.set("ar_pt", "1");
+      store.set("ar_pt_t", titleFor(url.pathname));
       curtain.classList.add("is-covering");
       setTimeout(function () { location.href = url.href; }, 900);
     });
-    window.addEventListener("pageshow", function (e) { if (e.persisted) { curtain.classList.remove("is-covering", "is-leaving"); doc.classList.remove("pt-enter"); } });
+    window.addEventListener("pageshow", function (e) { if (e.persisted) resetCurtain(); });
   }
 
   /* ---------- Marquees: clone group for a seamless loop ---------- */

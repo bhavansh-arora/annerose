@@ -1280,3 +1280,4 @@ fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
   .cta-final .btn-row .btn { justify-content: space-between; }
   .cta-final__contact { flex-direction: column; align-items: center; }
 }
+.curtain.no-anim .curtain__cols i, .curtain.no-anim .curtain__label, .curtain.no-anim .curtain__bar i { transition: none !important; }
