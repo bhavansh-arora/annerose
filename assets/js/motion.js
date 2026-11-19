@@ -82,6 +82,9 @@
   var gsap = window.gsap;
   var ST = window.ScrollTrigger;
   gsap.registerPlugin(ST);
+  /* iOS shows/hides its address bar while scrolling, which fires resize;
+     don't recalculate every trigger mid-scroll (prevents jumps/jitter). */
+  ST.config({ ignoreMobileResize: true });
 
   /* Lenis <-> ScrollTrigger */
   if (window.lenis) {
@@ -246,10 +249,16 @@
 
   /* ---------- Stacking cards: earlier cards recede ---------- */
   var stackCards = $$(".stack-card");
-  stackCards.forEach(function (card, i) {
-    var next = stackCards[i + 1];
-    if (!next) return;
-    gsap.fromTo(card, { scale: 1 }, { scale: 0.94, ease: "none", scrollTrigger: { trigger: next, start: "top 85%", end: "top 30%", scrub: true } });
+  /* Desktop only: on touch devices a scroll-scrubbed transform on a sticky
+     element fights the browser's own scrolling and makes the cards shiver. */
+  mm.add("(min-width: 1025px) and (hover: hover) and (pointer: fine)", function () {
+    var tweens = [];
+    stackCards.forEach(function (card, i) {
+      var next = stackCards[i + 1];
+      if (!next) return;
+      tweens.push(gsap.fromTo(card, { scale: 1 }, { scale: 0.94, ease: "none", scrollTrigger: { trigger: next, start: "top 85%", end: "top 30%", scrub: true } }));
+    });
+    return function () { tweens.forEach(function (t) { t.scrollTrigger && t.scrollTrigger.kill(); t.kill(); }); gsap.set(stackCards, { clearProps: "transform" }); };
   });
 
   /* ---------- Progress ring ---------- */
